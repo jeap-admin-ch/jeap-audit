@@ -1,21 +1,20 @@
 package ch.admin.bit.jeap.audit.command.builder;
 
-import ch.admin.bit.jeap.domainevent.avro.AvroDomainEvent;
 import ch.admin.bit.jeap.messaging.kafka.properties.KafkaProperties;
+import ch.admin.bit.jeap.messaging.model.Message;
 import ch.admin.bit.jeap.messaging.model.MessagePublisher;
-import ch.admin.bit.jeap.security.resource.token.JeapAuthenticationToken;
 
 import java.time.Instant;
 import java.util.Optional;
 
 public class CreateAuditRecordCommandBuilderFactory {
 
-    private final Optional<CreateAuditRecordCommandUserInfoProvider> userInfoProvider;
+    private final Optional<CreateAuditRecordCommandTriggerUserProvider> triggerUserProvider;
     private final KafkaProperties kafkaProperties;
 
-    public CreateAuditRecordCommandBuilderFactory(Optional<CreateAuditRecordCommandUserInfoProvider> userInfoProvider,
+    public CreateAuditRecordCommandBuilderFactory(Optional<CreateAuditRecordCommandTriggerUserProvider> triggerUserProvider,
                                                   KafkaProperties kafkaProperties) {
-        this.userInfoProvider = userInfoProvider;
+        this.triggerUserProvider = triggerUserProvider;
         this.kafkaProperties = kafkaProperties;
     }
 
@@ -45,37 +44,30 @@ public class CreateAuditRecordCommandBuilderFactory {
     }
 
     /**
-     * Convenience method which sets a system as trigger with component and system taken from the event.
+     * Convenience method which sets a system as trigger with component and system taken from the message.
      *
      * @param serviceName the serviceName of the command.
      * @param systemName  the systemName of the command.
      * @param timestamp   the timestamp of the command.
      * @return the command builder to set other attributes
      */
-    public CreateAuditRecordCommandBuilder createWithSystemTriggerFromEvent(String serviceName, String systemName, String department, Instant timestamp, AvroDomainEvent avroDomainEvent) {
+    public CreateAuditRecordCommandBuilder createWithSystemTriggerFromMessage(String serviceName, String systemName, String department, Instant timestamp, Message message) {
         CreateAuditRecordCommandBuilder builder = CreateAuditRecordCommandBuilder.createCommandBuilder(serviceName, systemName, timestamp);
-        addSystemTrigger(builder, department, avroDomainEvent);
-        builder.idempotenceId("audit-" + avroDomainEvent.getIdentity().getIdempotenceId());
+        addSystemTrigger(builder, department, message);
+        builder.idempotenceId("audit-" + message.getIdentity().getIdempotenceId());
 
         return builder;
     }
 
     private void addUserTrigger(CreateAuditRecordCommandBuilder builder) {
-        JeapAuthenticationToken jeapAuthenticationToken = getJeapAuthenticationToken();
-        String userId = jeapAuthenticationToken.getTokenSubject();
-        String identityProvider = jeapAuthenticationToken.getToken().getIssuer().toString();
-        builder.setTriggerUser(userId, identityProvider);
-    }
-
-    private JeapAuthenticationToken getJeapAuthenticationToken() {
-        if (!userInfoProvider.isPresent()) {
+        if (triggerUserProvider.isEmpty()) {
             throw AuditException.unsupportedWithoutJeapSecurity();
         }
-        return userInfoProvider.get().getJeapAuthenticationToken();
+        triggerUserProvider.get().provideTriggerUser(builder);
     }
 
-    private void addSystemTrigger(CreateAuditRecordCommandBuilder builder, String department, AvroDomainEvent avroDomainEvent) {
-        MessagePublisher publisher = avroDomainEvent.getPublisher();
+    private void addSystemTrigger(CreateAuditRecordCommandBuilder builder, String department, Message message) {
+        MessagePublisher publisher = message.getPublisher();
         String system = publisher.getSystem();
         String component = publisher.getService();
         builder.setTriggerSystem(department, system, component);

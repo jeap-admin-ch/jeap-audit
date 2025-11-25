@@ -1,7 +1,7 @@
 package ch.admin.bit.jeap.audit.command.builder.spring;
 
 import ch.admin.bit.jeap.audit.command.builder.CreateAuditRecordCommandBuilderFactory;
-import ch.admin.bit.jeap.audit.command.builder.CreateAuditRecordCommandUserInfoProvider;
+import ch.admin.bit.jeap.audit.command.builder.CreateAuditRecordCommandTriggerUserProvider;
 import ch.admin.bit.jeap.messaging.kafka.properties.KafkaProperties;
 import ch.admin.bit.jeap.security.resource.authentication.ServletSimpleAuthorization;
 import ch.admin.bit.jeap.security.resource.semanticAuthentication.ServletSemanticAuthorization;
@@ -19,11 +19,11 @@ public class CreateAuditCommandAutoConfiguration {
      */
     @Bean
     @ConditionalOnClass(JeapAuthenticationToken.class) // only if jeap-security is in classpath
-    public CreateAuditRecordCommandUserInfoProvider createAuditRecordCommandUserProvider(
+    public CreateAuditRecordCommandTriggerUserProvider createAuditRecordCommandUserProvider(
             Optional<ServletSemanticAuthorization> jeapSemanticAuthorizationOptional,
             Optional<ServletSimpleAuthorization> simpleAuthorizationOptional
     ) {
-        return new CreateAuditRecordCommandUserInfoProvider(jeapSemanticAuthorizationOptional, simpleAuthorizationOptional);
+        return new CreateAuditRecordCommandTriggerUserProvider(jeapSemanticAuthorizationOptional, simpleAuthorizationOptional);
     }
 
     /**
@@ -32,7 +32,7 @@ public class CreateAuditCommandAutoConfiguration {
      */
     @Bean
     public CreateAuditRecordCommandBuilderFactory auditRecordCommandBuilderFactory(
-            Optional<CreateAuditRecordCommandUserInfoProvider> userInfoProvider,
+            Optional<CreateAuditRecordCommandTriggerUserProvider> userInfoProvider,
             KafkaProperties kafkaProperties) {
         return new CreateAuditRecordCommandBuilderFactory(userInfoProvider, kafkaProperties);
     }

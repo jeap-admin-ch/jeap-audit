@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: jeap-audit-command-builder-test

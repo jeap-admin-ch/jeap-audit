@@ -7,19 +7,15 @@ import ch.admin.bit.jeap.domainevent.DomainEventIdentity;
 import ch.admin.bit.jeap.domainevent.avro.AvroDomainEvent;
 import ch.admin.bit.jeap.messaging.kafka.properties.KafkaProperties;
 import ch.admin.bit.jeap.messaging.model.MessagePublisher;
-import ch.admin.bit.jeap.security.resource.token.JeapAuthenticationToken;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.oauth2.jwt.Jwt;
 
-import java.net.URI;
-import java.net.URL;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -36,23 +32,20 @@ class CreateAuditRecordCommandBuilderFactoryTest {
     private static final String SERVICE_NAME_OTHER = "MY_SERVICE_OTHER";
 
     @Test
-    void userFromAuthorizationSystemServiceFromKafkaProperties() throws Exception {
-        URL url = URI.create(IDENTITY_PROVIDER).toURL();
-        Jwt jwtToken = mock(Jwt.class);
-        when(jwtToken.getIssuer()).thenReturn(url);
-
+    void userFromAuthorizationSystemServiceFromKafkaProperties() {
         KafkaProperties kafkaProperties = mock(KafkaProperties.class);
         when(kafkaProperties.getSystemName()).thenReturn(SYSTEM_NAME);
         when(kafkaProperties.getServiceName()).thenReturn(SERVICE_NAME);
 
-        JeapAuthenticationToken token = mock(JeapAuthenticationToken.class);
-        when(token.getTokenSubject()).thenReturn(USER);
-        when(token.getToken()).thenReturn(jwtToken);
+        CreateAuditRecordCommandTriggerUserProvider triggerUserProvider = mock(CreateAuditRecordCommandTriggerUserProvider.class);
+        // Mock the provideTriggerUser method to set the user information on the builder
+        doAnswer(invocation -> {
+            CreateAuditRecordCommandBuilder builder = invocation.getArgument(0);
+            builder.setTriggerUser(USER, IDENTITY_PROVIDER);
+            return null;
+        }).when(triggerUserProvider).provideTriggerUser(any(CreateAuditRecordCommandBuilder.class));
 
-        CreateAuditRecordCommandUserInfoProvider userInfoProvider = mock(CreateAuditRecordCommandUserInfoProvider.class);
-        when(userInfoProvider.getJeapAuthenticationToken()).thenReturn(token);
-
-        Optional<CreateAuditRecordCommandUserInfoProvider> userInfoProviderOptional = Optional.of(userInfoProvider);
+        Optional<CreateAuditRecordCommandTriggerUserProvider> userInfoProviderOptional = Optional.of(triggerUserProvider);
 
         CreateAuditRecordCommandBuilderFactory factory = new CreateAuditRecordCommandBuilderFactory(userInfoProviderOptional, kafkaProperties);
 
@@ -60,7 +53,7 @@ class CreateAuditRecordCommandBuilderFactoryTest {
         CreateAuditRecordCommand command = builder.build();
 
         Object trigger = command.getPayload().getTrigger();
-        assertTrue(trigger instanceof AuditUser);
+        assertInstanceOf(AuditUser.class, trigger);
         AuditUser auditUser = (AuditUser) trigger;
         assertEquals(USER, auditUser.getId());
         assertEquals(IDENTITY_PROVIDER, auditUser.getIdentityProvider());
@@ -70,19 +63,16 @@ class CreateAuditRecordCommandBuilderFactoryTest {
     }
 
     @Test
-    void userFromAuthorization() throws Exception {
-        URL url = URI.create(IDENTITY_PROVIDER).toURL();
-        Jwt jwtToken = mock(Jwt.class);
-        when(jwtToken.getIssuer()).thenReturn(url);
+    void userFromAuthorization() {
+        CreateAuditRecordCommandTriggerUserProvider triggerUserProvider = mock(CreateAuditRecordCommandTriggerUserProvider.class);
+        // Mock the provideTriggerUser method to set the user information on the builder
+        doAnswer(invocation -> {
+            CreateAuditRecordCommandBuilder builder = invocation.getArgument(0);
+            builder.setTriggerUser(USER, IDENTITY_PROVIDER);
+            return null;
+        }).when(triggerUserProvider).provideTriggerUser(any(CreateAuditRecordCommandBuilder.class));
 
-        JeapAuthenticationToken token = mock(JeapAuthenticationToken.class);
-        when(token.getTokenSubject()).thenReturn(USER);
-        when(token.getToken()).thenReturn(jwtToken);
-
-        CreateAuditRecordCommandUserInfoProvider userInfoProvider = mock(CreateAuditRecordCommandUserInfoProvider.class);
-        when(userInfoProvider.getJeapAuthenticationToken()).thenReturn(token);
-
-        Optional<CreateAuditRecordCommandUserInfoProvider> userInfoProviderOptional = Optional.of(userInfoProvider);
+        Optional<CreateAuditRecordCommandTriggerUserProvider> userInfoProviderOptional = Optional.of(triggerUserProvider);
 
         CreateAuditRecordCommandBuilderFactory factory = new CreateAuditRecordCommandBuilderFactory(userInfoProviderOptional, null);
 
@@ -90,7 +80,7 @@ class CreateAuditRecordCommandBuilderFactoryTest {
         CreateAuditRecordCommand command = builder.build();
 
         Object trigger = command.getPayload().getTrigger();
-        assertTrue(trigger instanceof AuditUser);
+        assertInstanceOf(AuditUser.class, trigger);
         AuditUser auditUser = (AuditUser) trigger;
         assertEquals(USER, auditUser.getId());
         assertEquals(IDENTITY_PROVIDER, auditUser.getIdentityProvider());
@@ -103,7 +93,7 @@ class CreateAuditRecordCommandBuilderFactoryTest {
     void systemFromEvent() {
         String department = "my-department";
 
-        Optional<CreateAuditRecordCommandUserInfoProvider> userInfoProviderOptional = Optional.empty();
+        Optional<CreateAuditRecordCommandTriggerUserProvider> userInfoProviderOptional = Optional.empty();
 
         CreateAuditRecordCommandBuilderFactory factory = new CreateAuditRecordCommandBuilderFactory(userInfoProviderOptional, null);
 
@@ -118,11 +108,11 @@ class CreateAuditRecordCommandBuilderFactoryTest {
         when(event.getPublisher()).thenReturn(publisher);
         when(event.getIdentity()).thenReturn(identity);
 
-        CreateAuditRecordCommandBuilder builder = factory.createWithSystemTriggerFromEvent(SERVICE_NAME, SYSTEM_NAME, department, TIMESTAMP, event);
+        CreateAuditRecordCommandBuilder builder = factory.createWithSystemTriggerFromMessage(SERVICE_NAME, SYSTEM_NAME, department, TIMESTAMP, event);
         CreateAuditRecordCommand command = builder.build();
 
         Object trigger = command.getPayload().getTrigger();
-        assertTrue(trigger instanceof AuditSystemComponent);
+        assertInstanceOf(AuditSystemComponent.class, trigger);
         AuditSystemComponent auditSystemComponent = (AuditSystemComponent) trigger;
         assertEquals(SYSTEM_NAME_OTHER, auditSystemComponent.getSystem());
         assertEquals(SERVICE_NAME_OTHER, auditSystemComponent.getComponent());

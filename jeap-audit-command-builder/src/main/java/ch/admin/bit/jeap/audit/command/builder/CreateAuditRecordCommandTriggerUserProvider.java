@@ -7,14 +7,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
-public class CreateAuditRecordCommandUserInfoProvider {
+public class CreateAuditRecordCommandTriggerUserProvider {
 
     private final Optional<ServletSemanticAuthorization> jeapSemanticAuthorizationOptional;
     private final Optional<ServletSimpleAuthorization> simpleAuthorizationOptional;
 
 
-    public CreateAuditRecordCommandUserInfoProvider(Optional<ServletSemanticAuthorization> jeapSemanticAuthorizationOptional,
-                                                    Optional<ServletSimpleAuthorization> simpleAuthorizationOptional) {
+    public CreateAuditRecordCommandTriggerUserProvider(Optional<ServletSemanticAuthorization> jeapSemanticAuthorizationOptional,
+                                                       Optional<ServletSimpleAuthorization> simpleAuthorizationOptional) {
         this.jeapSemanticAuthorizationOptional = jeapSemanticAuthorizationOptional;
         this.simpleAuthorizationOptional = simpleAuthorizationOptional;
         if (jeapSemanticAuthorizationOptional.isEmpty() && simpleAuthorizationOptional.isEmpty()) {
@@ -22,7 +22,7 @@ public class CreateAuditRecordCommandUserInfoProvider {
         }
     }
 
-    public JeapAuthenticationToken getJeapAuthenticationToken() {
+    public void provideTriggerUser(CreateAuditRecordCommandBuilder builder) {
         try {
             JeapAuthenticationToken jeapAuthenticationToken;
             if (jeapSemanticAuthorizationOptional.isPresent()) {
@@ -33,7 +33,9 @@ public class CreateAuditRecordCommandUserInfoProvider {
                 ServletSimpleAuthorization servletSimpleAuthorization = simpleAuthorizationOptional.get();
                 jeapAuthenticationToken = servletSimpleAuthorization.getJeapAuthenticationToken();
             }
-            return jeapAuthenticationToken;
+            String userId = jeapAuthenticationToken.getTokenSubject();
+            String identityProvider = jeapAuthenticationToken.getToken().getIssuer().toString();
+            builder.setTriggerUser(userId, identityProvider);
         } catch (Exception e) {
             throw AuditException.unsupportedAuthentication(SecurityContextHolder.getContext().getAuthentication());
         }

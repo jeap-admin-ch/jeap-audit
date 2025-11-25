@@ -3,13 +3,12 @@ package ch.admin.bit.jeap.audit.transactional.outbox;
 import ch.admin.bit.jeap.audit.command.builder.CreateAuditRecordCommandBuilder;
 import ch.admin.bit.jeap.audit.command.builder.CreateAuditRecordCommandBuilderFactory;
 import ch.admin.bit.jeap.audit.record.create.CreateAuditRecordCommand;
-import ch.admin.bit.jeap.domainevent.avro.AvroDomainEvent;
+import ch.admin.bit.jeap.messaging.model.Message;
 import ch.admin.bit.jeap.messaging.transactionaloutbox.outbox.TransactionalOutbox;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 @RequiredArgsConstructor
@@ -53,7 +52,7 @@ public class CreateAuditRecordCommandTransactionOutboxSender {
     }
 
     /**
-     * Convenience method which sets a system as trigger with component and system taken from the event
+     * Convenience method which sets a system as trigger with component and system taken from the message
      * and sends a command to the configured topic (through transactional outbox).
      *
      * @param serviceName the serviceName of the command.
@@ -61,8 +60,8 @@ public class CreateAuditRecordCommandTransactionOutboxSender {
      * @param timestamp   the timestamp of the command.
      */
     @Transactional
-    public void auditSystemEvent(String serviceName, String systemName, String department, Instant timestamp, AvroDomainEvent avroDomainEvent, Consumer<CreateAuditRecordCommandBuilder> commandConsumerBuilder) {
-        CreateAuditRecordCommandBuilder builder = builderFactory.createWithSystemTriggerFromEvent(serviceName, systemName, department, timestamp, avroDomainEvent);
+    public void auditSystemEvent(String serviceName, String systemName, String department, Instant timestamp, Message message, Consumer<CreateAuditRecordCommandBuilder> commandConsumerBuilder) {
+        CreateAuditRecordCommandBuilder builder = builderFactory.createWithSystemTriggerFromMessage(serviceName, systemName, department, timestamp, message);
         commandConsumerBuilder.accept(builder);
 
         CreateAuditRecordCommand command = builder.build();
