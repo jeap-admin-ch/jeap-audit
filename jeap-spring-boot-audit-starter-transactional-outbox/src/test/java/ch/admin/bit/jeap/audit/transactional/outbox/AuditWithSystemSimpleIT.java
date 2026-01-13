@@ -7,6 +7,7 @@ import ch.admin.bit.jeap.audit.record.create.CreateAuditRecordCommandPayload;
 import ch.admin.bit.jeap.domainevent.DomainEventIdentity;
 import ch.admin.bit.jeap.domainevent.avro.AvroDomainEvent;
 import ch.admin.bit.jeap.messaging.avro.AvroMessagePublisher;
+import ch.admin.bit.jeap.messaging.kafka.properties.KafkaProperties;
 import ch.admin.bit.jeap.messaging.kafka.test.KafkaIntegrationTestBase;
 import ch.admin.bit.jeap.messaging.model.MessagePublisher;
 import ch.admin.bit.jeap.security.resource.token.JeapAuthenticationContext;
@@ -30,19 +31,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -69,7 +67,6 @@ class AuditWithSystemSimpleIT extends KafkaIntegrationTestBase {
     @Value("${spring.application.name}")
     private String applicationName;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private JwsBuilderFactory jwsBuilderFactory;
 
@@ -78,6 +75,9 @@ class AuditWithSystemSimpleIT extends KafkaIntegrationTestBase {
     @Autowired
     private AuditCommandConsumer auditCommandConsumer;
 
+    @Autowired
+    private KafkaProperties kafkaProperties;
+
     @BeforeEach
     void setUp() {
         String baseUrl = "/" + applicationName + "/api";
@@ -85,7 +85,7 @@ class AuditWithSystemSimpleIT extends KafkaIntegrationTestBase {
     }
 
     @Test
-    void auditSystemEvent() {
+    void auditMessageTriggeredSystemEvent() {
         String token = createJeapTokenWithUserRoles(SIMPLE_AUTH_READ_ROLE);
         String serviceName = UUID.randomUUID().toString();
         String systemName = UUID.randomUUID().toString();
@@ -94,7 +94,6 @@ class AuditWithSystemSimpleIT extends KafkaIntegrationTestBase {
         String triggerComponent = UUID.randomUUID().toString();
 
         AuditDto auditDto = new AuditDto(serviceName, systemName, department, triggerSystem, triggerComponent);
-
 
         given()
                 .spec(auditBaseUrlSpec)
@@ -106,6 +105,30 @@ class AuditWithSystemSimpleIT extends KafkaIntegrationTestBase {
                 .then()
                 .statusCode(HttpStatus.OK.value());
 
+        assertAuditEvent(triggerComponent, triggerSystem, department, systemName, serviceName);
+    }
+
+    @Test
+    void auditMessageTriggeredSystemEventFromSystem() {
+        String token = createJeapTokenWithUserRoles(SIMPLE_AUTH_READ_ROLE);
+        String serviceName = kafkaProperties.getServiceName();
+        String systemName = kafkaProperties.getSystemName();
+        String department = UUID.randomUUID().toString();
+        String triggerSystem = kafkaProperties.getSystemName();
+        String triggerComponent = kafkaProperties.getServiceName();
+
+        given()
+                .spec(auditBaseUrlSpec)
+                .auth().oauth2(token)
+                .when()
+                .put("/audit/from-system?department=" + department + "&system=" + systemName + "&service=" + serviceName)
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        assertAuditEvent(triggerComponent, triggerSystem, department, systemName, serviceName);
+    }
+
+    private void assertAuditEvent(String triggerComponent, String triggerSystem, String department, String systemName, String serviceName) {
         Awaitility.await()
                 .atMost(5, TimeUnit.SECONDS)
                 .untilAsserted(() -> auditCommandConsumer.hasConsumedCommand());
@@ -115,7 +138,7 @@ class AuditWithSystemSimpleIT extends KafkaIntegrationTestBase {
         CreateAuditRecordCommandPayload payload = command.getPayload();
         assertNotNull(payload);
         Object trigger = payload.getTrigger();
-        assertTrue(trigger instanceof AuditSystemComponent);
+        assertThat(trigger).isInstanceOf(AuditSystemComponent.class);
         AuditSystemComponent auditSystemComponent = (AuditSystemComponent) trigger;
         assertEquals(triggerComponent, auditSystemComponent.getComponent());
         assertEquals(triggerSystem, auditSystemComponent.getSystem());
@@ -126,6 +149,7 @@ class AuditWithSystemSimpleIT extends KafkaIntegrationTestBase {
         assertEquals(systemName, publisher.getSystem());
         assertEquals(serviceName, publisher.getService());
     }
+
 
     private String createJeapTokenWithUserRoles(String... roles) {
         return jwsBuilderFactory.createValidForFixedLongPeriodBuilder(SUBJECT, JeapAuthenticationContext.SYS).
@@ -169,7 +193,28 @@ class AuditWithSystemSimpleIT extends KafkaIntegrationTestBase {
             when(avroDomainEvent.getIdentity()).thenReturn(identity);
 
 
-            sender.auditSystemEvent(auditDto.getServiceName(), auditDto.getSystemName(), auditDto.getDepartment(),
+            sender.auditMessageTriggeredSystemEvent(auditDto.getServiceName(), auditDto.getSystemName(), auditDto.getDepartment(),
+                    Instant.now(), avroDomainEvent,
+                    // Example on how to use the builder
+                    builder -> {
+                        builder.setEventType(AuditEventType.CREATED);
+                        builder.setContext(USE_CASE, PROCESS_ID);
+                    });
+        }
+
+        @PutMapping(path = "/from-system")
+        void putAudit(@RequestParam String department, @RequestParam String system, @RequestParam String service) {
+            MessagePublisher publisher = mock(MessagePublisher.class);
+            when(publisher.getSystem()).thenReturn(system);
+            when(publisher.getService()).thenReturn(service);
+
+            DomainEventIdentity identity = mock(DomainEventIdentity.class);
+            when(identity.getIdempotenceId()).thenReturn("jodeli");
+
+            AvroDomainEvent avroDomainEvent = mock(AvroDomainEvent.class);
+            when(avroDomainEvent.getPublisher()).thenReturn(publisher);
+            when(avroDomainEvent.getIdentity()).thenReturn(identity);
+            sender.auditMessageTriggeredSystemEvent(department,
                     Instant.now(), avroDomainEvent,
                     // Example on how to use the builder
                     builder -> {

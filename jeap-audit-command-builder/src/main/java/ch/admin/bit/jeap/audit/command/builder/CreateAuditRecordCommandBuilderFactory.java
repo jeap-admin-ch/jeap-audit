@@ -19,10 +19,10 @@ public class CreateAuditRecordCommandBuilderFactory {
     }
 
     /**
-     * Convenience method which sets a user as trigger with the userId given by the token subject (will be the Pams ID in the context of the ePortal) and identity provider from token.
+     * Convenience method which sets a user as trigger with the userId given by the token subject (will be the PAMS ID in the context of the ePortal) and identity provider from token.
      * System and service name are taken from the kafka properties.
      *
-     * @param timestamp the timestamp of the command.
+     * @param timestamp the timestamp of the command
      * @return the command builder to set other attributes
      */
     public CreateAuditRecordCommandBuilder createWithUserTrigger(Instant timestamp) {
@@ -30,11 +30,11 @@ public class CreateAuditRecordCommandBuilderFactory {
     }
 
     /**
-     * Convenience method which sets a user as trigger with the userId given by the token subject (will be the Pams ID in the context of the ePortal) and identity provider from token.
+     * Convenience method which sets a user as trigger with the userId given by the token subject (will be the PAMS ID in the context of the ePortal) and identity provider from token.
      *
-     * @param serviceName the serviceName of the command.
-     * @param systemName  the systemName of the command.
-     * @param timestamp   the timestamp of the command.
+     * @param serviceName the serviceName of the command
+     * @param systemName  the systemName of the command
+     * @param timestamp   the timestamp of the command
      * @return the command builder to set other attributes
      */
     public CreateAuditRecordCommandBuilder createWithUserTrigger(String serviceName, String systemName, Instant timestamp) {
@@ -43,17 +43,33 @@ public class CreateAuditRecordCommandBuilderFactory {
         return builder;
     }
 
+
+    /**
+     * Convenience method which sets a system as trigger with component and system taken from the message.
+     * System and service name are taken from the kafka properties.
+     *
+     * @param triggeringServiceDepartment the department of the triggering service
+     * @param timestamp                   the timestamp of the command
+     * @param message                     the message
+     * @return the command builder to set other attributes
+     */
+    public CreateAuditRecordCommandBuilder createWithSystemTriggerFromMessage(String triggeringServiceDepartment, Instant timestamp, Message message) {
+        return createWithSystemTriggerFromMessage(kafkaProperties.getServiceName(), kafkaProperties.getSystemName(), triggeringServiceDepartment, timestamp, message);
+    }
+
     /**
      * Convenience method which sets a system as trigger with component and system taken from the message.
      *
-     * @param serviceName the serviceName of the command.
-     * @param systemName  the systemName of the command.
-     * @param timestamp   the timestamp of the command.
+     * @param serviceName                 the serviceName of the command
+     * @param systemName                  the systemName of the command
+     * @param triggeringServiceDepartment the department of the triggering service
+     * @param timestamp                   the timestamp of the command
+     * @param message                     the message
      * @return the command builder to set other attributes
      */
-    public CreateAuditRecordCommandBuilder createWithSystemTriggerFromMessage(String serviceName, String systemName, String department, Instant timestamp, Message message) {
+    public CreateAuditRecordCommandBuilder createWithSystemTriggerFromMessage(String serviceName, String systemName, String triggeringServiceDepartment, Instant timestamp, Message message) {
         CreateAuditRecordCommandBuilder builder = CreateAuditRecordCommandBuilder.createCommandBuilder(serviceName, systemName, timestamp);
-        addSystemTrigger(builder, department, message);
+        addSystemTrigger(builder, triggeringServiceDepartment, message);
         builder.idempotenceId("audit-" + message.getIdentity().getIdempotenceId());
 
         return builder;

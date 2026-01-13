@@ -38,9 +38,9 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = TestApp.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = {
@@ -65,7 +65,6 @@ class AuditWithUserSimpleIT extends KafkaIntegrationTestBase {
     @Value("${spring.application.name}")
     private String applicationName;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private JwsBuilderFactory jwsBuilderFactory;
 
@@ -84,7 +83,7 @@ class AuditWithUserSimpleIT extends KafkaIntegrationTestBase {
     }
 
     @Test
-    void auditUserEvent_fromToken() {
+    void auditUserTriggeredEvent_fromToken() {
         String token = createJeapTokenWithUserRoles(SIMPLE_AUTH_READ_ROLE);
         given()
                 .spec(auditBaseUrlSpec)
@@ -103,7 +102,7 @@ class AuditWithUserSimpleIT extends KafkaIntegrationTestBase {
         CreateAuditRecordCommandPayload payload = command.getPayload();
         assertNotNull(payload);
         Object trigger = payload.getTrigger();
-        assertTrue(trigger instanceof AuditUser);
+        assertThat(trigger).isInstanceOf(AuditUser.class);
         AuditUser auditUser = (AuditUser) trigger;
         assertEquals(SUBJECT, auditUser.getId());
         assertEquals("http://localhost/auth", auditUser.getIdentityProvider());
@@ -115,7 +114,7 @@ class AuditWithUserSimpleIT extends KafkaIntegrationTestBase {
     }
 
     @Test
-    void auditUserEvent_withExplicitParameters() {
+    void auditUserTriggeredEvent_withExplicitParameters() {
         String token = createJeapTokenWithUserRoles(SIMPLE_AUTH_READ_ROLE);
         String serviceName = UUID.randomUUID().toString();
         String systemName = UUID.randomUUID().toString();
@@ -141,7 +140,7 @@ class AuditWithUserSimpleIT extends KafkaIntegrationTestBase {
         CreateAuditRecordCommandPayload payload = command.getPayload();
         assertNotNull(payload);
         Object trigger = payload.getTrigger();
-        assertTrue(trigger instanceof AuditUser);
+        assertThat(trigger).isInstanceOf(AuditUser.class);
         AuditUser auditUser = (AuditUser) trigger;
         assertEquals(SUBJECT, auditUser.getId());
         assertEquals("http://localhost/auth", auditUser.getIdentityProvider());
@@ -184,7 +183,7 @@ class AuditWithUserSimpleIT extends KafkaIntegrationTestBase {
         void putAudit(@RequestBody(required = false) AuditWithSystemSemanticIT.AuditDto auditDto) {
             if (auditDto == null || auditDto.getServiceName() == null || auditDto.getSystemName() == null) {
                 log.info("Will send without user defined service name and system name");
-                sender.auditUserEvent(Instant.now(),
+                sender.auditUserTriggeredEvent(Instant.now(),
                         // Example on how to use the builder
                         builder -> {
                             builder.setEventType(AuditEventType.CREATED);
@@ -193,7 +192,7 @@ class AuditWithUserSimpleIT extends KafkaIntegrationTestBase {
                 );
             } else {
                 log.info("Will send with user defined service name and system name");
-                sender.auditUserEvent(auditDto.getServiceName(), auditDto.getSystemName(), Instant.now(),
+                sender.auditUserTriggeredEvent(auditDto.getServiceName(), auditDto.getSystemName(), Instant.now(),
                         // Example on how to use the builder
                         builder -> {
                             builder.setEventType(AuditEventType.CREATED);

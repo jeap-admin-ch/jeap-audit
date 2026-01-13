@@ -19,14 +19,16 @@ public class CreateAuditRecordCommandTransactionOutboxSender {
     private final String topic;
 
     /**
-     * Convenience method which sets a user as trigger with userId (will be Pams-Id) and identity provider from token
+     * Convenience method which sets a user as trigger with userId (will be PAMS-Id) and identity provider from token
      * and sends a command to the configured topic (through transactional outbox).
-     * System and service name are taken from the kafka properties.
+     * System and service name are taken from the Kafka properties.
      *
-     * @param timestamp the timestamp of the command.
+     * @param timestamp              the timestamp of the command.
+     * @param commandConsumerBuilder the builder consumer
+     *
      */
     @Transactional
-    public void auditUserEvent(Instant timestamp, Consumer<CreateAuditRecordCommandBuilder> commandConsumerBuilder) {
+    public void auditUserTriggeredEvent(Instant timestamp, Consumer<CreateAuditRecordCommandBuilder> commandConsumerBuilder) {
         CreateAuditRecordCommandBuilder builder = builderFactory.createWithUserTrigger(timestamp);
         commandConsumerBuilder.accept(builder);
 
@@ -35,15 +37,15 @@ public class CreateAuditRecordCommandTransactionOutboxSender {
     }
 
     /**
-     * Convenience method which sets a user as trigger with userId (will be Pams-Id) and identity provider from token
+     * Convenience method which sets a user as trigger with userId (will be PAMS-Id) and identity provider from token
      * and sends a command to the configured topic (through transactional outbox).
      *
-     * @param serviceName the serviceName of the command.
-     * @param systemName  the systemName of the command.
-     * @param timestamp   the timestamp of the command.
+     * @param serviceName the serviceName of the command
+     * @param systemName  the systemName of the command
+     * @param timestamp   the timestamp of the command
      */
     @Transactional
-    public void auditUserEvent(String serviceName, String systemName, Instant timestamp, Consumer<CreateAuditRecordCommandBuilder> commandConsumerBuilder) {
+    public void auditUserTriggeredEvent(String serviceName, String systemName, Instant timestamp, Consumer<CreateAuditRecordCommandBuilder> commandConsumerBuilder) {
         CreateAuditRecordCommandBuilder builder = builderFactory.createWithUserTrigger(serviceName, systemName, timestamp);
         commandConsumerBuilder.accept(builder);
 
@@ -55,13 +57,37 @@ public class CreateAuditRecordCommandTransactionOutboxSender {
      * Convenience method which sets a system as trigger with component and system taken from the message
      * and sends a command to the configured topic (through transactional outbox).
      *
-     * @param serviceName the serviceName of the command.
-     * @param systemName  the systemName of the command.
-     * @param timestamp   the timestamp of the command.
+     * @param serviceName                 the serviceName of the command
+     * @param systemName                  the systemName of the command
+     * @param triggeringServiceDepartment the department of the triggering service
+     * @param timestamp                   the timestamp of the command
+     * @param message                     the message
+     * @param commandConsumerBuilder      the builder consumer
+     *
      */
     @Transactional
-    public void auditSystemEvent(String serviceName, String systemName, String department, Instant timestamp, Message message, Consumer<CreateAuditRecordCommandBuilder> commandConsumerBuilder) {
-        CreateAuditRecordCommandBuilder builder = builderFactory.createWithSystemTriggerFromMessage(serviceName, systemName, department, timestamp, message);
+    public void auditMessageTriggeredSystemEvent(String serviceName, String systemName, String triggeringServiceDepartment, Instant timestamp, Message message, Consumer<CreateAuditRecordCommandBuilder> commandConsumerBuilder) {
+        CreateAuditRecordCommandBuilder builder = builderFactory.createWithSystemTriggerFromMessage(serviceName, systemName, triggeringServiceDepartment, timestamp, message);
+        commandConsumerBuilder.accept(builder);
+
+        CreateAuditRecordCommand command = builder.build();
+        send(command);
+    }
+
+    /**
+     * Convenience method which sets a system as trigger with component and system taken from the message
+     * and sends a command to the configured topic (through transactional outbox).
+     * System and service name are taken from the Kafka properties.
+     *
+     * @param triggeringServiceDepartment the department of the triggering service
+     * @param timestamp                   the timestamp of the command
+     * @param message                     the message
+     * @param commandConsumerBuilder      the builder consumer
+     *
+     */
+    @Transactional
+    public void auditMessageTriggeredSystemEvent(String triggeringServiceDepartment, Instant timestamp, Message message, Consumer<CreateAuditRecordCommandBuilder> commandConsumerBuilder) {
+        CreateAuditRecordCommandBuilder builder = builderFactory.createWithSystemTriggerFromMessage(triggeringServiceDepartment, timestamp, message);
         commandConsumerBuilder.accept(builder);
 
         CreateAuditRecordCommand command = builder.build();
@@ -74,7 +100,7 @@ public class CreateAuditRecordCommandTransactionOutboxSender {
      * @param command the command to send
      */
     @Transactional
-    public void auditUserEvent(CreateAuditRecordCommand command) {
+    public void auditEvent(CreateAuditRecordCommand command) {
         send(command);
     }
 
