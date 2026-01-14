@@ -14,6 +14,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - updated wiremock from 3.13.1 to 3.13.2
 - ignore Sonar warnings in tests (MojoRule and AbstractMojoTestCase is deprecated) for the moment, java:S1874
 - update jeap-messaging from 11.7.0 to 11.8.1
+- update jeap-messaging-outbox from 11.7.0 to 11.8.0
 
 ## [4.12.0] - 2026-01-07
 
