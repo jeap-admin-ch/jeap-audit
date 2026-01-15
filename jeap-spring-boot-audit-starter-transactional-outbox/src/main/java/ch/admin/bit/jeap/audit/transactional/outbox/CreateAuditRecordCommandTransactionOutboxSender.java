@@ -23,8 +23,8 @@ public class CreateAuditRecordCommandTransactionOutboxSender {
      * and sends a command to the configured topic (through transactional outbox).
      * System and service name are taken from the Kafka properties.
      *
-     * @param timestamp              the timestamp of the command.
-     * @param commandConsumerBuilder the builder consumer
+     * @param timestamp              timestamp of the command.
+     * @param commandConsumerBuilder builder consumer
      *
      */
     @Transactional
@@ -40,9 +40,9 @@ public class CreateAuditRecordCommandTransactionOutboxSender {
      * Convenience method which sets a user as trigger with userId (will be PAMS-Id) and identity provider from token
      * and sends a command to the configured topic (through transactional outbox).
      *
-     * @param serviceName the serviceName of the command
-     * @param systemName  the systemName of the command
-     * @param timestamp   the timestamp of the command
+     * @param serviceName name of the auditing microservice
+     * @param systemName  name of the auditing microservice's system
+     * @param timestamp   timestamp of the command
      */
     @Transactional
     public void auditUserTriggeredEvent(String serviceName, String systemName, Instant timestamp, Consumer<CreateAuditRecordCommandBuilder> commandConsumerBuilder) {
@@ -57,12 +57,12 @@ public class CreateAuditRecordCommandTransactionOutboxSender {
      * Convenience method which sets a system as trigger with component and system taken from the message
      * and sends a command to the configured topic (through transactional outbox).
      *
-     * @param serviceName                 the serviceName of the command
-     * @param systemName                  the systemName of the command
-     * @param triggeringServiceDepartment the department of the triggering service
-     * @param timestamp                   the timestamp of the command
-     * @param message                     the message
-     * @param commandConsumerBuilder      the builder consumer
+     * @param serviceName                 name of the auditing microservice
+     * @param systemName                  name of the auditing microservice's system
+     * @param triggeringServiceDepartment department of the triggering service
+     * @param timestamp                   timestamp of the command
+     * @param message                     business audit event
+     * @param commandConsumerBuilder      builder consumer
      *
      */
     @Transactional
@@ -79,10 +79,10 @@ public class CreateAuditRecordCommandTransactionOutboxSender {
      * and sends a command to the configured topic (through transactional outbox).
      * System and service name are taken from the Kafka properties.
      *
-     * @param triggeringServiceDepartment the department of the triggering service
-     * @param timestamp                   the timestamp of the command
-     * @param message                     the message
-     * @param commandConsumerBuilder      the builder consumer
+     * @param triggeringServiceDepartment department of the triggering service
+     * @param timestamp                   timestamp of the command
+     * @param message                     business audit event
+     * @param commandConsumerBuilder      builder consumer
      *
      */
     @Transactional

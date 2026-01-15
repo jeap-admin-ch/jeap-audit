@@ -22,7 +22,7 @@ public class CreateAuditRecordCommandBuilderFactory {
      * Convenience method which sets a user as trigger with the userId given by the token subject (will be the PAMS ID in the context of the ePortal) and identity provider from token.
      * System and service name are taken from the kafka properties.
      *
-     * @param timestamp the timestamp of the command
+     * @param timestamp timestamp of the command
      * @return the command builder to set other attributes
      */
     public CreateAuditRecordCommandBuilder createWithUserTrigger(Instant timestamp) {
@@ -32,9 +32,9 @@ public class CreateAuditRecordCommandBuilderFactory {
     /**
      * Convenience method which sets a user as trigger with the userId given by the token subject (will be the PAMS ID in the context of the ePortal) and identity provider from token.
      *
-     * @param serviceName the serviceName of the command
-     * @param systemName  the systemName of the command
-     * @param timestamp   the timestamp of the command
+     * @param serviceName name of the auditing microservice
+     * @param systemName  name of the auditing microservice's system
+     * @param timestamp   timestamp of the command
      * @return the command builder to set other attributes
      */
     public CreateAuditRecordCommandBuilder createWithUserTrigger(String serviceName, String systemName, Instant timestamp) {
@@ -48,9 +48,9 @@ public class CreateAuditRecordCommandBuilderFactory {
      * Convenience method which sets a system as trigger with component and system taken from the message.
      * System and service name are taken from the kafka properties.
      *
-     * @param triggeringServiceDepartment the department of the triggering service
-     * @param timestamp                   the timestamp of the command
-     * @param message                     the message
+     * @param triggeringServiceDepartment department of the triggering service
+     * @param timestamp                   timestamp of the command
+     * @param message                     business audit event
      * @return the command builder to set other attributes
      */
     public CreateAuditRecordCommandBuilder createWithSystemTriggerFromMessage(String triggeringServiceDepartment, Instant timestamp, Message message) {
@@ -60,11 +60,11 @@ public class CreateAuditRecordCommandBuilderFactory {
     /**
      * Convenience method which sets a system as trigger with component and system taken from the message.
      *
-     * @param serviceName                 the serviceName of the command
-     * @param systemName                  the systemName of the command
-     * @param triggeringServiceDepartment the department of the triggering service
-     * @param timestamp                   the timestamp of the command
-     * @param message                     the message
+     * @param serviceName                 name of the auditing microservice
+     * @param systemName                  name of the auditing microservice's system
+     * @param triggeringServiceDepartment department of the triggering service
+     * @param timestamp                   timestamp of the command
+     * @param message                     business audit event
      * @return the command builder to set other attributes
      */
     public CreateAuditRecordCommandBuilder createWithSystemTriggerFromMessage(String serviceName, String systemName, String triggeringServiceDepartment, Instant timestamp, Message message) {
