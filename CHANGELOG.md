@@ -5,10 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.13.0] - 2026-01-14
+## [4.14.0] - 2026-01-14
 
 ### Changed
 - Refactoring and improving method names in CreateAuditRecordCommandTransactionOutboxSender
+
+## [4.13.0] - 2026-01-14
+
+### Changed
+- Update parent from 5.16.8 to 5.17.0
+- update jeap-starter from 19.8.0 to 19.9.0
+- update jeap-messaging from 11.7.0 to 11.8.1
+- update jeap-messaging-outbox from 11.7.0 to 11.8.0
+- update commons-io from 2.20.0 to 2.21.0
 
 ## [4.12.0] - 2026-01-07
 
