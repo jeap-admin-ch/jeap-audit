@@ -12,6 +12,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Added support for exposing additional metrics about application health contributors.
 - AvroMessageBuilder now validates the presence of the `variant` field in the message type before setting it, throwing an exception if it is undefined.
 - update jeap-messaging from 11.8.1 to 11.9.0
+- update jeap-messaging-outbox from 11.8.0 to 11.9.0
 
 ## [4.14.0] - 2026-01-16
 
