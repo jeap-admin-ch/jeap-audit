@@ -12,6 +12,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - update jeap-spring-boot-vault-starter from 19.10.0 to 19.11.0
 - update jeap-crypto from 5.10.0 to 5.11.0
 - update jeap-messaging from 11.10.0 to 11.11.0
+- update jeap-messaging-outbox from 11.10.0 to 11.11.0
 
 ## [4.15.0] - 2026-01-16
 ### Changed
