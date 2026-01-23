@@ -9,6 +9,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 - update jeap-messaging from 11.12.0 to 11.13.0
 - remove v from tag version in comparison of jeap-messaging-avro-maven-plugin GitClient
+- update jeap-messaging-outbox from 11.12.0 to 11.13.0
 
 ## [4.17.0] - 2026-01-21
 ### Changed
