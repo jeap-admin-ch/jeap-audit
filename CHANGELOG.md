@@ -9,6 +9,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 - update jeap-messaging from 11.13.0 to 11.14.0
 - added ErrorHandlingTargetFilter to filter out messages not intended for the consuming service (Header: jeap_eh_target_service)
+- update jeap-messaging-outbox from 11.13.0 to 11.14.0
 
 ## [4.18.0] - 2026-01-23
 ### Changed
