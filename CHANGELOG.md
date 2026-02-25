@@ -12,6 +12,10 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - update jeap-starter from 19.13.0 to 19.14.0
 - Improved template path resolution in the annotation processor for robust, cross-platform path handling and avoids issues with illegal characters in file paths.
 - update jeap-messaging from 11.15.0 to 11.15.1
+- update jeap-spring-boot-roles-anywhere-starter from 1.17.0 to 1.18.0
+- update jeap-crypto from 5.13.0 to 5.14.0
+- update jeap-messaging from 11.15.1 to 11.16.0
+- update jeap-spring-boot-vault-starter from 19.13.0 to 19.14.0
 
 ## [4.21.0] - 2026-02-13
 ### Changed
