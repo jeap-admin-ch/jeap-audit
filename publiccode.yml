@@ -1,8 +1,8 @@
 publiccodeYmlVersion: 0.4.0
 name: jeap-audit
 applicationSuite: jEAP
-softwareVersion: 4.23.0
-releaseDate: 2026-03-02
+softwareVersion: 4.24.0
+releaseDate: 2026-03-10
 url: "https://github.com/jeap-admin-ch/jeap-audit.git"
 landingURL: "https://github.com/jeap-admin-ch/jeap"
 platforms:
