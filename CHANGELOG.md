@@ -11,11 +11,13 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
     - Support for reactive/webflux
     - Support removed from monitoring, tracing, swagger, security web-config starters
     - Support for reactive
+    - Support for reactive
 - update jeap-starter from 19.16.0 to 20.0.0
 -  Breaking Change
 - **Removed**
 - update jeap-crypto from 5.16.0 to 6.0.0
 - update jeap-messaging from 11.18.0 to 12.0.0
+- update jeap-messaging-outbox from 11.20.0 to 12.0.0
 
 ## [4.24.0] - 2026-03-10
 
