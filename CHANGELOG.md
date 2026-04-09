@@ -9,6 +9,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 - update jeap-messaging from 13.2.0 to 13.2.1
 - Signature is not verified if requireSignature is set to false. 
+- update jeap-messaging-outbox from 13.2.0 to 13.2.1
 
 ## [6.2.0] - 2026-04-08
 ### Changed
