@@ -33,15 +33,14 @@
     <parent>
         <artifactId>jeap-internal-spring-boot-parent</artifactId>
         <groupId>ch.admin.bit.jeap</groupId>
-        <version>7.0.0-alpha-springboot4</version>
+        <version>7.0.4-alpha-springboot4</version>
     </parent>
 
     <properties>
         <maven.javadoc.skip>false</maven.javadoc.skip>
-        <jeap-messaging.version>13.4.0</jeap-messaging.version>
-        <jeap-messaging-outbox.version>13.4.0</jeap-messaging-outbox.version>
-        <jeap-starter.version>21.3.0</jeap-starter.version>
-        <commons-io.version>2.21.0</commons-io.version>
+        <jeap-messaging.version>14.0.0-alpha-springboot4</jeap-messaging.version>
+        <jeap-messaging-outbox.version>14.0.0-alpha-springboot4</jeap-messaging-outbox.version>
+        <jeap-starter.version>22.0.0-alpha-springboot4</jeap-starter.version>
     </properties>
 
     <modules>
@@ -73,12 +72,11 @@
                 <artifactId>create-audit-record-command</artifactId>
                 <version>1.0.1</version>
             </dependency>
-            <!-- This is needed because commons-io 2.11.0  (CVE-2024-47554) is coming with spring-kafka-test 3.3.7 -->
-            <!-- this is tracked by the jEAP team -->
             <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commons-io.version}</version>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>spring-mock-mvc</artifactId>
+                <version>${rest-assured.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
