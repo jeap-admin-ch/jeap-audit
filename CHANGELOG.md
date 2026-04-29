@@ -11,9 +11,20 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [7.3.0-alpha-springboot4] - 2026-04-29
 ### Changed
   - fixed version in publiccode.html
+  See `jeap-messaging-outbox-test/src/test/resources/db/migration/common/V2__add-sampled-to-deferred-message.sql`
+  ALTER TABLE deferred_message ADD COLUMN sampled boolean;
+  is preserved across the outbox relay cycle.
+  for the reference delta used by this library's own integration tests. Rows written by previous versions carry
+  `NULL` and are treated as sampled on relay (legacy-compatible default).
+  ```
+  ```sql
 - update jeap-starter from 22.2.0-alpha-springboot4 to 22.3.1-alpha-springboot4
 - Fixed Sonar findings.
 - update jeap-messaging from 14.2.0-alpha-springboot4 to 14.3.1-alpha-springboot4
+- Downstream services must ship a Flyway migration of the form:
+- Tracing stack migrated from Brave/Zipkin to OpenTelemetry
+- update jeap-messaging-outbox from 14.2.0-alpha-springboot4 to 14.3.0-alpha-springboot4
+- New column `sampled boolean` on `deferred_message`. Needed so the sampling decision captured from the origin trace
 
 ## [7.2.0-alpha-springboot4] - 2026-04-24
 
