@@ -27,7 +27,7 @@
 
     <artifactId>jeap-audit</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
-    <version>7.7.0-alpha-springboot4-SNAPSHOT</version>
+    <version>7.7.1null</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -40,7 +40,7 @@
         <maven.javadoc.skip>false</maven.javadoc.skip>
         <jeap-messaging.version>14.7.0-alpha-springboot4</jeap-messaging.version>
         <jeap-messaging-outbox.version>14.7.0-alpha-springboot4</jeap-messaging-outbox.version>
-        <jeap-starter.version>22.5.0-alpha-springboot4</jeap-starter.version>
+        <jeap-starter.version>22.5.1-alpha-springboot4</jeap-starter.version>
     </properties>
 
     <modules>
