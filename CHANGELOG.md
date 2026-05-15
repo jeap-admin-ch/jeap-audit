@@ -17,6 +17,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Set `SseAwareEtagHeaderFilter` as default bean for the ShallowEtagFilter. 
 - added second argument to TraceBridge.getSpan to allow to pass in the spanName and have more meaningful traces
 - update jeap-messaging from 14.7.0-alpha-springboot4 to 14.8.0-alpha-springboot4
+- update jeap-messaging-outbox from 14.7.0-alpha-springboot4 to 14.8.0-alpha-springboot4
 
 ## [7.7.0-alpha-springboot4] - 2026-05-07
 ### Changed
