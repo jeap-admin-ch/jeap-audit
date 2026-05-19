@@ -11,6 +11,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Update parent from 6.0.4 to 6.0.5
 - update jeap-starter from 21.5.0 to 21.6.0
 - update jeap-messaging from 13.8.0 to 13.9.0
+- update jeap-messaging from 14.7.0-alpha-springboot4 to 14.8.0-alpha-springboot4
+- update jeap-messaging-outbox from 13.8.0 to 13.9.0
 
 ## [6.8.0] - 2026-05-06
 
