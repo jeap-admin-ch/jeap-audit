@@ -17,6 +17,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - update jeap-crypto from 8.5.0-alpha-springboot4 to 8.6.0-alpha-springboot4
 - update jeap-messaging from 14.8.0-alpha-springboot4 to 14.9.0-alpha-springboot4
 - update jeap-spring-boot-vault-starter from 22.5.1-alpha-springboot4 to 22.6.0-alpha-springboot4
+- update jeap-messaging-outbox from 14.8.0-alpha-springboot4 to 14.9.0-alpha-springboot4
 
 ## [7.7.1-alpha-springboot4-SNAPSHOT] - 2026-05-15
 ### Changed
