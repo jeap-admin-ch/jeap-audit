@@ -6,106 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 > - Spring Boot 3 maintenance (bug fixes, patches, and regular updates) continues on branch `release/springboot3`.
-> - The Spring Boot 4 upgrade process happens on the `master` branch, with the goal of releasing Spring Boot 4 compatible versions of all jeap components in a single major release.
 
-## [7.8.0-alpha-springboot4] - 2026-05-19
-
+## [8.0.0] - 2026-05-27
 ### Changed
-- Update parent from 7.0.7-alpha-springboot4 to 7.0.9-alpha-springboot4
-- update jeap-starter from 22.5.1-alpha-springboot4 to 22.6.0-alpha-springboot4
-- update jeap-spring-boot-roles-anywhere-starter from 2.4.0-alpha-springboot4 to 2.5.0-alpha-springboot4
-- update jeap-crypto from 8.5.0-alpha-springboot4 to 8.6.0-alpha-springboot4
-- update jeap-messaging from 14.8.0-alpha-springboot4 to 14.9.0-alpha-springboot4
-- update jeap-spring-boot-vault-starter from 22.5.1-alpha-springboot4 to 22.6.0-alpha-springboot4
-- update jeap-messaging-outbox from 14.8.0-alpha-springboot4 to 14.9.0-alpha-springboot4
-
-## [7.7.1-alpha-springboot4-SNAPSHOT] - 2026-05-15
-### Changed
-  It ignores requests with Accept: text/event-stream as the `ShallowEtagFilter` was waiting for the response to complete
-  which never happens as it is a stream.
-- update jeap-starter from 22.5.0-alpha-springboot4 to 22.5.1-alpha-springboot4
-- Custom subclass of `ShallowEtagFilter` called `SseAwareEtagHeaderFilter`
-- Set `SseAwareEtagHeaderFilter` as default bean for the ShallowEtagFilter. 
-- added second argument to TraceBridge.getSpan to allow to pass in the spanName and have more meaningful traces
-- update jeap-messaging from 14.7.0-alpha-springboot4 to 14.8.0-alpha-springboot4
-- update jeap-messaging-outbox from 14.7.0-alpha-springboot4 to 14.8.0-alpha-springboot4
-
-## [7.7.0-alpha-springboot4] - 2026-05-07
-### Changed
-  escaping Spring's MVC handling while the trace context (`traceId`, `spanId`) is still present.
-  Enable via `jeap.logging.rest.unhandled-exception-logging.enabled=true`.
-  Enable via `jeap.logging.rest.unhandled-exception-logging.enabled=true`.
-  escaping Spring's MVC handling while the trace context (`traceId`, `spanId`) is still present.
-  Enable via `jeap.logging.rest.unhandled-exception-logging.enabled=true`.
-  escaping Spring's MVC handling while the trace context (`traceId`, `spanId`) is still present.
-- update jeap-starter from 22.4.0-alpha-springboot4 to 22.5.0-alpha-springboot4
-- Added opt-in `UnhandledExceptionLoggingFilter` in `jeap-spring-boot-logging-starter` that logs exceptions
-- update jeap-spring-boot-vault-starter from 22.4.0-alpha-springboot4 to 22.5.0-alpha-springboot4
-- update jeap-messaging from 14.6.0-alpha-springboot4 to 14.7.0-alpha-springboot4
-- update jeap-crypto from 8.4.0-alpha-springboot4 to 8.5.0-alpha-springboot4
-- update jeap-messaging-outbox from 14.6.0-alpha-springboot4 to 14.7.0-alpha-springboot4
-
-## [7.6.0-alpha-springboot4] - 2026-05-06
-
-### Changed
-- Update parent from 7.0.6-alpha-springboot4 to 7.0.7-alpha-springboot4
-- update jeap-starter from 22.3.1-alpha-springboot4 to 22.4.0-alpha-springboot4
-- update jeap-spring-boot-roles-anywhere-starter from 2.3.0-alpha-springboot4 to 2.4.0-alpha-springboot4
-- update jeap-crypto from 8.3.0-alpha-springboot4 to 8.4.0-alpha-springboot4
-- update jeap-messaging from 14.5.0-alpha-springboot4 to 14.6.0-alpha-springboot4
-- update jeap-spring-boot-vault-starter from 22.3.1-alpha-springboot4 to 22.4.0-alpha-springboot4
-- update jeap-messaging-outbox from 14.5.0-alpha-springboot4 to 14.6.0-alpha-springboot4
-
-## [7.5.0-alpha-springboot4] - 2026-05-01
-### Changed
-- update jeap-messaging from 14.4.0-alpha-springboot4 to 14.5.0-alpha-springboot4
-- adapted TemplatePathResolver that it works in IDE again
-- update jeap-messaging-outbox from 14.4.0-alpha-springboot4 to 14.5.0-alpha-springboot4
-
-## [7.4.0-alpha-springboot4] - 2026-04-30
-### Changed
-- update jeap-messaging from 14.3.1-alpha-springboot4 to 14.4.0-alpha-springboot4
-- added possibility to set templatesPath in JeapMessageConsumerContractsByTemplates to be more flexible in the location of the templates, e.g. for opensearch writer index
-- update jeap-messaging-outbox from 14.3.0-alpha-springboot4 to 14.4.0-alpha-springboot4
-
-## [7.3.0-alpha-springboot4] - 2026-04-29
-### Changed
-- update jeap-messaging to 14.3.1-alpha-springboot4
-- update jeap-messaging-outbox to 14.3.0-alpha-springboot4
-
-### Breaking Change
-- The new transactional outbox version uses a new additional column `sampled boolean` on the table `deferred_message`.
-- Downstream services must ship a Flyway migration that adds this field to the database schema:
-  `ALTER TABLE deferred_message ADD COLUMN sampled boolean;`
-
-## [7.2.0-alpha-springboot4] - 2026-04-24
-
-### Changed
-- Update parent from 7.0.5-alpha-springboot4 to 7.0.6-alpha-springboot4
-- update jeap-starter from 22.1.0-alpha-springboot4 to 22.2.0-alpha-springboot4
-- update jeap-spring-boot-vault-starter from 22.1.0-alpha-springboot4 to 22.2.0-alpha-springboot4
-- update jeap-spring-boot-roles-anywhere-starter from 2.1.0-alpha-springboot4 to 2.3.0-alpha-springboot4
-- update jeap-messaging from 14.1.0-alpha-springboot4 to 14.2.0-alpha-springboot4
-- update jeap-crypto from 8.1.0-alpha-springboot4 to 8.2.0-alpha-springboot4
-- update jeap-messaging-outbox from 14.1.0-alpha-springboot4 to 14.2.0-alpha-springboot4
-
-## [7.1.0-alpha-springboot4] - 2026-04-23
-
-### Changed
-- Update parent from 7.0.4-alpha-springboot4 to 7.0.5-alpha-springboot4
-- update jeap-starter from 22.0.0-alpha-springboot4 to 22.1.0-alpha-springboot4
-- update jeap-spring-boot-vault-starter from 21.3.0 to 22.1.0-alpha-springboot4
-- update jeap-crypto from 8.0.0-alpha-springboot4 to 8.1.0-alpha-springboot4
-- Update parent from 7.0.3-alpha-springboot4 to 7.0.5-alpha-springboot4
-- update jeap-messaging from 14.0.0-alpha-springboot4 to 14.1.0-alpha-springboot4
-- Update parent from 7.0.2-alpha-springboot4 to 7.0.5-alpha-springboot4
-- update jeap-spring-boot-roles-anywhere-starter from 2.0.0-alpha-springboot4 to 2.1.0-alpha-springboot4
-- update jeap-messaging-outbox from 14.0.0-alpha-springboot4 to 14.1.0-alpha-springboot4
-
-## [7.0.0] - 2026-xx-xx
-
-### Changed
-- Update parent from 6.0.3 to 7.0.0 (Spring Boot 4)
+  - Official release with spring boot 4
 
 ## [6.4.0] - 2026-04-16
 
