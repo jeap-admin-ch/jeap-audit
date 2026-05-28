@@ -46,15 +46,14 @@ class AuditTransactionalOutboxSenderBeanRegistrar implements ImportBeanDefinitio
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-        List<String> topics = resolveTopics();
-        boolean singleTopicConfiguration = isSingleTopicConfiguration(topics);
+        TopicConfiguration topicConfiguration = resolveTopicConfiguration();
 
-        for (String topic : topics) {
-            registerSenderBeanDefinition(registry, topic, singleTopicConfiguration);
+        for (String topic : topicConfiguration.topics()) {
+            registerSenderBeanDefinition(registry, topic, topicConfiguration.usesSingleTopicBeanName());
         }
     }
 
-    private List<String> resolveTopics() {
+    private TopicConfiguration resolveTopicConfiguration() {
         String singleTopic = environment.getProperty(SINGLE_TOPIC_PROPERTY);
         List<String> topics = getTopicList();
 
@@ -62,10 +61,10 @@ class AuditTransactionalOutboxSenderBeanRegistrar implements ImportBeanDefinitio
             throw new IllegalStateException(String.format("Configure either '%s' or '%s', not both.", SINGLE_TOPIC_PROPERTY, TOPICS_PROPERTY));
         }
         if (!topics.isEmpty()) {
-            return validateTopics(topics, TOPICS_PROPERTY);
+            return new TopicConfiguration(validateTopics(topics, TOPICS_PROPERTY), false);
         }
         if (singleTopic != null) {
-            return validateTopics(List.of(singleTopic), SINGLE_TOPIC_PROPERTY);
+            return new TopicConfiguration(validateTopics(List.of(singleTopic), SINGLE_TOPIC_PROPERTY), true);
         }
 
         throw new IllegalStateException(String.format("Missing audit transactional outbox topic configuration. Configure either '%s' or '%s'.", SINGLE_TOPIC_PROPERTY, TOPICS_PROPERTY));
@@ -93,10 +92,6 @@ class AuditTransactionalOutboxSenderBeanRegistrar implements ImportBeanDefinitio
         return List.copyOf(uniqueTopics);
     }
 
-    private boolean isSingleTopicConfiguration(List<String> topics) {
-        return topics.size() == 1 && environment.getProperty(SINGLE_TOPIC_PROPERTY) != null;
-    }
-
     private void registerSenderBeanDefinition(BeanDefinitionRegistry registry, String topic, boolean singleTopicConfiguration) {
         RootBeanDefinition beanDefinition = new RootBeanDefinition(CreateAuditRecordCommandTransactionOutboxSender.class);
         beanDefinition.getConstructorArgumentValues().addGenericArgumentValue(new RuntimeBeanReference(TransactionalOutbox.class));
@@ -106,5 +101,8 @@ class AuditTransactionalOutboxSenderBeanRegistrar implements ImportBeanDefinitio
 
         String beanName = singleTopicConfiguration ? SINGLE_TOPIC_BEAN_NAME : topic;
         registry.registerBeanDefinition(beanName, beanDefinition);
+    }
+
+    private record TopicConfiguration(List<String> topics, boolean usesSingleTopicBeanName) {
     }
 }
