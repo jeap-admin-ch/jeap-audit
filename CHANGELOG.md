@@ -7,9 +7,17 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 > - Spring Boot 3 maintenance (bug fixes, patches, and regular updates) continues on branch `release/springboot3`.
 
-## [8.0.0] - 2026-05-27
+## [8.1.0] - 2026-05-28
 ### Changed
-  - Official release with spring boot 4
+
+- Support multiple topics in the audit outbox sender configuration
+    - Use `jeap.audit.transactional-outbox.topics` to instantiate multiple senders for different topics
+
+## [8.0.0] - 2026-05-27
+
+### Changed
+
+- Official release with spring boot 4
 
 ## [6.4.0] - 2026-04-16
 
