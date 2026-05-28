@@ -42,15 +42,9 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = TestApp.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = {
-                "jeap.audit.transactional-outbox.topic=mysystem-audit",
-                "jeap.messaging.kafka.service-name=todo",
-                "jeap.messaging.kafka.system-name=test-system"
-        }
-)
+        properties = "jeap.audit.transactional-outbox.topic=mysystem-audit")
 @Import({JeapOAuth2IntegrationTestResourceConfiguration.class, AuditWithUserSemanticIT.TestConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class AuditWithUserSemanticIT extends KafkaIntegrationTestBase {

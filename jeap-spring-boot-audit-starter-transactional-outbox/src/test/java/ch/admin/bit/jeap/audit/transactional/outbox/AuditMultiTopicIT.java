@@ -30,9 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = TestApp.class,
         properties = {
                 "jeap.audit.transactional-outbox.topics[0]=" + AuditMultiTopicIT.PRIMARY_TOPIC,
-                "jeap.audit.transactional-outbox.topics[1]=" + AuditMultiTopicIT.SECONDARY_TOPIC,
-                "jeap.messaging.kafka.service-name=todo",
-                "jeap.messaging.kafka.system-name=test-system"
+                "jeap.audit.transactional-outbox.topics[1]=" + AuditMultiTopicIT.SECONDARY_TOPIC
         }
 )
 @Import(AuditMultiTopicIT.TestConfig.class)

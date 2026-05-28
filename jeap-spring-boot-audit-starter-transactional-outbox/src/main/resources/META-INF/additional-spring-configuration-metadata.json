@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "jeap.audit.transactional-outbox.topic",
+      "type": "java.lang.String",
+      "description": "Topic to send CreateAuditRecordCommand messages to through the transactional outbox. Configure either this property or jeap.audit.transactional-outbox.topics."
+    },
+    {
+      "name": "jeap.audit.transactional-outbox.topics",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Topics to send CreateAuditRecordCommand messages to through the transactional outbox. One CreateAuditRecordCommandTransactionOutboxSender bean is registered per topic and qualified with the topic name. Configure either this property or jeap.audit.transactional-outbox.topic."
+    }
+  ]
+}

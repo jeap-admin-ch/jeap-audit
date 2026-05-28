@@ -43,12 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(classes = TestApp.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = {
-                "jeap.audit.transactional-outbox.topic=mysystem-audit",
-                "jeap.messaging.kafka.service-name=todo",
-                "jeap.messaging.kafka.system-name=test-system"
-        }
-)
+        properties = "jeap.audit.transactional-outbox.topic=mysystem-audit")
 @Import({JeapOAuth2IntegrationTestResourceConfiguration.class, AuditWithUserSimpleIT.TestConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class AuditWithUserSimpleIT extends KafkaIntegrationTestBase {

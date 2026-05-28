@@ -47,12 +47,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = TestApp.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = {
-                "jeap.audit.transactional-outbox.topic=mysystem-audit",
-                "jeap.messaging.kafka.service-name=todo",
-                "jeap.messaging.kafka.system-name=test-system"
-        }
-)
+        properties = "jeap.audit.transactional-outbox.topic=mysystem-audit")
 @Import({JeapOAuth2IntegrationTestResourceConfiguration.class, AuditWithSystemSemanticIT.TestConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class AuditWithSystemSemanticIT extends KafkaIntegrationTestBase {

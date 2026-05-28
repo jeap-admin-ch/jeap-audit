@@ -12,6 +12,10 @@ spring:
   jpa:
     open-in-view: false
 jeap:
+  messaging:
+    kafka:
+      system-name: test-system
+      service-name: ${spring.application.name}
   security:
     oauth2:
       resourceserver:
