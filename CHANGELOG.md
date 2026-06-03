@@ -9,6 +9,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 - update jeap-messaging from 13.9.0 to 13.9.1
 - Exclude squareup wire dependency from glue schema registry serde: not used, fixes vulnerability scan (CVE-2026-45799)
+- update jeap-messaging from 15.2.0 to 15.2.1
+- update jeap-messaging-outbox from 13.9.0 to 13.9.1
 
 ## [6.9.0] - 2026-05-19
 
