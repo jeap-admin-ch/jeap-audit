@@ -20,6 +20,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - update jeap-spring-boot-vault-starter from 23.1.0 to 23.2.0
 - update maven-plugin-testing-harness from 3.5.0 to 3.5.1
 - update maven.api from 3.9.14 to 3.9.16
+- update jeap-messaging-outbox from 15.2.1 to 15.3.0
 
 ## [8.3.1] - 2026-06-03
 ### Changed
