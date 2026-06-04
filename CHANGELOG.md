@@ -10,8 +10,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ## [8.4.0] - 2026-06-03
 
 ### Changed
-
 - Update parent from 8.0.1 to 8.1.0
+- update jeap-starter from 23.1.0 to 23.2.0
 
 ## [8.3.1] - 2026-06-03
 ### Changed
