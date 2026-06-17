@@ -36,7 +36,7 @@ public class CreateAuditRecordCommandTriggerUserProvider {
             String userId = jeapAuthenticationToken.getTokenSubject();
             String identityProvider = jeapAuthenticationToken.getToken().getIssuer().toString();
             builder.setTriggerUser(userId, identityProvider);
-        } catch (Exception e) {
+        } catch (Exception _) {
             throw AuditException.unsupportedAuthentication(SecurityContextHolder.getContext().getAuthentication());
         }
     }

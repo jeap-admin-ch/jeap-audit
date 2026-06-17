@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
  * convenience methods throw the expected AuditException when no Jeap Security is present.
  */
 @SpringBootTest
-public class CreateAuditRecordCommandBuilderFactoryWithoutJeapSecurityTest {
+class CreateAuditRecordCommandBuilderFactoryWithoutJeapSecurityTest {
 
     private static final String SYSTEM_NAME_MESSAGE = "systemNameMessage";
     private static final String SERVICE_NAME_MESSAGE = "systemNameMessage";
