@@ -20,6 +20,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - update jeap-messaging from 15.6.0 to 15.7.0
 - update jeap-messaging-outbox from 15.6.0 to 15.7.0
 - update jeap-messaging-outbox from 15.7.0 to 15.7.1
+- update jeap-starter from 23.5.2 to 23.6.0
 
 ## [8.7.1] - 2026-06-17
 
