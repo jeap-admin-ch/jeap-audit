@@ -11,6 +11,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 - update jeap-messaging from 15.9.0 to 15.10.0
 - refactor the upload artifact in the avro maven plugin to ignore errors if the artifact is already present in the repository
+- update jeap-messaging-outbox from 15.9.0 to 15.10.0
 
 ## [8.9.0] - 2026-06-18
 
