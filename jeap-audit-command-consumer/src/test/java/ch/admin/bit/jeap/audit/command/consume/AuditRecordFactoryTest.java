@@ -401,6 +401,36 @@ class AuditRecordFactoryTest {
     }
 
     @Test
+    void build_withAuditObject_WithDataValueNullValue() {
+        String userId = UUID.randomUUID().toString();
+        String identityProvider = UUID.randomUUID().toString();
+        String type = UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString();
+        String nameValue = UUID.randomUUID().toString();
+
+        CreateAuditRecordCommandBuilder builder = CreateAuditRecordCommandBuilder.createCommandBuilder(SERVICE_NAME, SYSTEM_NAME, TIMESTAMP);
+        builder.setEventType(AuditEventType.MODIFIED);
+        builder.setTriggerUser(userId, identityProvider);
+        builder.setAuditObject(type, id);
+        builder.addAuditObjectDataValue(AuditObjectDataRole.NEW, nameValue, null);
+
+        CreateAuditRecordCommand command = builder.build();
+
+        AuditRecord auditRecord = AuditRecordFactory.createAuditRecord(command);
+        assertNotNull(auditRecord);
+        AuditObject auditObject = auditRecord.auditedData();
+        assertNotNull(auditObject);
+        List<AuditObjectData> auditObjectDataList = auditObject.objectDataList();
+        assertEquals(1, auditObjectDataList.size());
+        AuditObjectData auditObjectData = auditObjectDataList.get(0);
+        assertEquals(AuditObjectData.AuditObjectDataType.VALUE, auditObjectData.type());
+        AuditObjectDataValue auditObjectDataValue = (AuditObjectDataValue) auditObjectData;
+        assertEquals(nameValue, auditObjectDataValue.name());
+        assertEquals(AuditObjectDataRole.NEW, auditObjectDataValue.role());
+        assertNull(auditObjectDataValue.value());
+    }
+
+    @Test
     void build_withAuditObject_WithDataElementsWithRole() {
         String userId = UUID.randomUUID().toString();
         String identityProvider = UUID.randomUUID().toString();

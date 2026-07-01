@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [8.14.0] - 2026-07-01
+### Changed
+- Bump `create-audit-record-command` from 1.0.1 to 1.0.2, making `AuditObjectDataValue.value` nullable so an audited value may be `null`
+
 ## [8.13.1] - 2026-07-01
 ### Changed
 - update jeap-starter from 23.10.0 to 23.10.1

@@ -1,8 +1,14 @@
 package ch.admin.bit.jeap.audit.command.builder;
 
 import ch.admin.bit.jeap.audit.record.create.*;
+import org.apache.avro.io.DecoderFactory;
+import org.apache.avro.io.Encoder;
+import org.apache.avro.io.EncoderFactory;
+import org.apache.avro.specific.SpecificDatumReader;
+import org.apache.avro.specific.SpecificDatumWriter;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -556,5 +562,51 @@ class CreateAuditRecordCommandBuilderTest {
         assertEquals(nameS3, auditObjectDataS3.getName());
         assertEquals(s3, auditObjectDataS3.getObjectReference());
         assertEquals(AuditObjectDataRole.NEW, auditObjectDataS3.getRole());
+    }
+
+    @Test
+    void build_withAuditObject_WithDataValueNullValue() throws Exception {
+        String userId = UUID.randomUUID().toString();
+        String identityProvider = UUID.randomUUID().toString();
+        String type = UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString();
+        String nameValue = UUID.randomUUID().toString();
+
+        CreateAuditRecordCommandBuilder builder = CreateAuditRecordCommandBuilder.createCommandBuilder(SERVICE_NAME, SYSTEM_NAME, TIMESTAMP);
+        builder.setEventType(AuditEventType.MODIFIED);
+        builder.setTriggerUser(userId, identityProvider);
+        builder.setAuditObject(type, id);
+        builder.addAuditObjectDataValue(AuditObjectDataRole.NEW, nameValue, null);
+
+        CreateAuditRecordCommand command = builder.build();
+
+        AuditObject auditedData = command.getPayload().getAuditedData();
+        assertNotNull(auditedData);
+        List<Object> objectData = auditedData.getObjectData();
+        assertNotNull(objectData);
+        assertEquals(1, objectData.size());
+        assertTrue(objectData.get(0) instanceof AuditObjectDataValue);
+        AuditObjectDataValue auditObjectDataValue = (AuditObjectDataValue) objectData.get(0);
+        assertEquals(nameValue, auditObjectDataValue.getName());
+        assertEquals(AuditObjectDataRole.NEW, auditObjectDataValue.getRole());
+        assertNull(auditObjectDataValue.getValue());
+
+        // A null value must survive an Avro binary serialization round-trip (only possible since schema v1.0.2)
+        CreateAuditRecordCommand deserialized = serializeAndDeserialize(command);
+        AuditObjectDataValue deserializedValue = (AuditObjectDataValue) deserialized.getPayload().getAuditedData().getObjectData().get(0);
+        assertEquals(nameValue, deserializedValue.getName());
+        assertEquals(AuditObjectDataRole.NEW, deserializedValue.getRole());
+        assertNull(deserializedValue.getValue());
+    }
+
+    private static CreateAuditRecordCommand serializeAndDeserialize(CreateAuditRecordCommand command) throws Exception {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Encoder encoder = EncoderFactory.get().binaryEncoder(out, null);
+        SpecificDatumWriter<CreateAuditRecordCommand> writer = new SpecificDatumWriter<>(CreateAuditRecordCommand.getClassSchema());
+        writer.write(command, encoder);
+        encoder.flush();
+
+        SpecificDatumReader<CreateAuditRecordCommand> reader = new SpecificDatumReader<>(CreateAuditRecordCommand.getClassSchema());
+        return reader.read(null, DecoderFactory.get().binaryDecoder(out.toByteArray(), null));
     }
 }
