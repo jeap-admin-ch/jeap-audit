@@ -25,7 +25,7 @@ CreateAuditRecordCommand command = CreateAuditRecordCommandBuilder
 |-----------------------------------------------------------|-------------------------------------------------------------------------------------------|
 | `setEventType(AuditEventType)`                            | Event type; defaults to `AuditEventType.UNKNOWN` if not set                                |
 | `setContext(useCase)` / `setContext(useCase, processId)`  | Sets the audit context; the two-arg form must agree with any `processId` already on the command |
-| `addEventData(key, value)`                                | Adds a free-form key/value event-data element (repeatable)                                 |
+| `addEventData(key, value)`                                | Adds a free-form key/value element to the audit *event* (`key` and `value` both required, repeatable) |
 | `setTriggerUser(userId, identityProvider)`                | Sets a user trigger (clears any system trigger)                                            |
 | `setTriggerSystem(department, system, component)`         | Sets a system trigger (clears any user trigger)                                            |
 | `setAuditObject(type, id)` / `setAuditObject(type, id, version)` | Sets the audited object                                                              |
@@ -37,6 +37,32 @@ CreateAuditRecordCommand command = CreateAuditRecordCommandBuilder
 
 The `role` argument on the `addAuditObjectData*` methods is an optional `AuditObjectDataRole`
 (`NEW` or `OLD`), used to distinguish before/after values; overloads without it pass `null`.
+
+### Event data (`addEventData`)
+
+Event data is a list of free-form `AuditEventDataElement` key/value pairs attached to the audit
+**event** — supplementary context about *the action*, as opposed to the state of the audited object.
+Use it for facts that are not a field of the audited business object, for example the reason for a
+change, a correlation/request id, the channel or client IP the action came through, or any
+use-case-specific tag.
+
+```java
+CreateAuditRecordCommand command = CreateAuditRecordCommandBuilder
+        .createCommandBuilder(serviceName, systemName, Instant.now())
+        .setEventType(AuditEventType.MODIFIED)
+        .addEventData("reason", "customer request")
+        .addEventData("correlationId", correlationId)
+        .setTriggerUser(userId, identityProvider)
+        .build();
+```
+
+- Both `key` and `value` are **required** (non-null `String`s).
+- `addEventData` is repeatable and preserves insertion order.
+- Event data is optional as a whole: if you add none, the event simply carries no event data.
+
+Contrast with `addAuditObjectData*`: use `addEventData` for event-level context; use the
+`addAuditObjectData*` methods to capture the audited object's data/state (which additionally support
+an optional `NEW`/`OLD` `role` for before/after comparison).
 
 ### Rules enforced by `build()`
 

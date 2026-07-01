@@ -25,7 +25,10 @@ explicit builder arguments), an optional `processId`, and a `CreateAuditRecordCo
 
 - `timestamp` — when the audited action happened.
 - `event` (`AuditEventDetails`) — the `type` (`AuditEventType`), an optional `context`
-  (`useCase` + `processId`) and an optional list of free-form `eventData` key/value elements.
+  (`useCase` + `processId`) and an optional list of free-form `eventData` key/value elements
+  (`AuditEventDataElement`, `key` and `value` both required). Event data carries supplementary
+  context about *the action* (e.g. reason, correlation id, channel), as opposed to `auditedData`
+  below which captures the state of the audited object.
 - `trigger` — **either** an `AuditUser` (`id`, `identityProvider`) **or** an `AuditSystemComponent`
   (`department`, `system`, `component`). Exactly one must be set.
 - `auditedData` (`AuditObject`, optional) — the object the action applied to: `type`, `id`, optional

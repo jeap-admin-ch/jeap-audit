@@ -27,9 +27,27 @@ type.
 | `serviceName` | `String`              | From the command publisher                                       |
 | `systemName`  | `String`              | From the command publisher                                       |
 | `timestamp`   | `Instant`             | When the audited action happened                                 |
-| `auditEvent`  | `AuditEvent`          | `eventType`, `AuditContext`, list of `AuditEventDataElement`     |
+| `auditEvent`  | `AuditEvent`          | `eventType`, `AuditContext`, list of `AuditEventDataElement` (see below) |
 | `trigger`     | `AuditTrigger`        | `AuditTriggerUser` or `AuditTriggerSystemComponent`              |
 | `auditedData` | `AuditObject`         | The audited object, or `null` if none                            |
+
+### Audit event data
+
+`auditRecord.auditEvent()` returns an `AuditEvent` with `eventType()` (`AuditEventType`), `context()`
+(`AuditContext` with `useCase()` and `processId()`, or `null`) and `eventDataElements()`.
+
+`eventDataElements()` is a `List<AuditEventDataElement>` of free-form key/value pairs describing the
+**event** — supplementary context about the action rather than the audited object's data (see
+[Building the command](building-the-command.md#event-data-addeventdata)). The list is **empty (never
+`null`)** when the command carried no event data. Each `AuditEventDataElement` exposes `key()` and
+`value()` (both `String`, always present).
+
+```java
+AuditEvent event = auditRecord.auditEvent();
+for (AuditEventDataElement element : event.eventDataElements()) {
+    handleEventData(element.key(), element.value());
+}
+```
 
 ### Trigger
 
