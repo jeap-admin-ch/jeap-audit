@@ -56,8 +56,3 @@ for more information.
 ## License
 
 This repository is Open Source Software licensed under the [Apache License 2.0](./LICENSE).
-
-## Usage of transactional-outbox audit starter
-
-If you use the transactional outbox you have to create the deferred_message and shedlock tables in your flyway 
-(or something else) scripts. See [V1__create-outbox-schema.sql](https://github.com/jeap-admin-ch/jeap-messaging-outbox/blob/main/jeap-messaging-outbox/src/test/resources/db/migration/common/V1__create-outbox-schema.sql). 

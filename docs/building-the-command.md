@@ -91,10 +91,13 @@ CreateAuditRecordCommand command = builder.build();
 ```
 
 `createWithUserTrigger` requires jEAP security on the classpath; without it the factory throws an
-`AuditException` ("You cannot use user convenience method without jEAP security"). The user id is the
-token subject (the PAMS ID in the ePortal context) and the identity provider is the token issuer.
-`createWithSystemTriggerFromMessage` derives the idempotence id from the source message
-(`audit-<message idempotence id>`).
+`AuditException` ("You cannot use user convenience method without jEAP security"). When jEAP security
+is present but the current security context does not hold a recognized `JeapAuthenticationToken` (e.g.
+the call is made outside a request scope or before authentication), the factory throws
+`AuditException` ("Could not determine user data from the security context. Unsupported user
+Authentication: `<auth>`"). The user id is the token subject (the PAMS ID in the ePortal context) and
+the identity provider is the token issuer. `createWithSystemTriggerFromMessage` derives the idempotence id from
+the source message (`audit-<message idempotence id>`).
 
 ## Related
 

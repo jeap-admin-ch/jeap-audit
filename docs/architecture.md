@@ -14,7 +14,7 @@ that command:
 flowchart LR
     A["Service (auditing)"] -->|builds| B[CreateAuditRecordCommand]
     B -->|TransactionalOutbox.sendMessage| C[(Kafka topic)]
-    C -->|@KafkaListener| D["Audit-consuming service"]
+    C -->|KafkaListener| D["Audit-consuming service"]
     D -->|AuditRecordFactory| E[AuditRecord model]
 ```
 
@@ -35,8 +35,108 @@ explicit builder arguments), an optional `processId`, and a `CreateAuditRecordCo
   `version` and a list of `objectData` entries (value, JSON or S3 reference; each with an optional
   `AuditObjectDataRole` of `NEW` or `OLD`).
 
-`AuditEventType` values are `CREATED`, `READ`, `LISTED`, `MODIFIED`, `DISCLOSED`, `DESTROYED`,
-`DELETED` and `UNKNOWN` (the builder default).
+`AuditEventType` values are `CREATED`, `READ`, `LISTED`, `MODIFIED`, `DISCLOSED`, `DESTROYED`, `DELETED` and `UNKNOWN`
+(the builder default).
+
+## Data model
+
+```mermaid
+classDiagram
+    direction TB
+
+    class EventType {
+        <<enumeration>>
+        CREATED
+        READ
+        LISTED
+        MODIFIED
+        DISCLOSED
+        DESTROYED
+        DELETED
+        UNKNOWN
+    }
+
+    class Context {
+        +useCase: String
+        +processId: String?
+    }
+
+    class Event {
+        +type: EventType
+    }
+
+    class EventDataElement {
+        +key: String
+        +value: String
+    }
+
+    class AuditRecord {
+        +timestamp: Instant
+    }
+
+    class Trigger {
+        <<abstract>>
+    }
+
+    class User {
+        +id: String
+        +identityProvider: String
+    }
+
+    class System {
+        +department: String
+        +system: String
+        +component: String
+    }
+
+    class Object {
+        +type: String
+        +id: String
+        +version: String?
+    }
+
+    class ObjectData {
+        <<abstract>>
+        +name: String
+    }
+
+    class ObjectDataRole {
+        <<enumeration>>
+        NEW
+        OLD
+    }
+
+    class ObjectDataValue {
+        +value: String?
+    }
+
+    class ObjectDataJSON {
+        +jsonAsUTF8: ByteBuffer
+    }
+
+    class ObjectDataS3 {
+        +objectReference: String
+    }
+
+    Event --> "1" EventType : eventType
+    Event --> "0..1" Context : context
+    Event --> "0..N" EventDataElement : eventData
+
+    AuditRecord --> "1" Event : event
+    AuditRecord --> "1" Trigger : trigger
+    AuditRecord --> "0..1" Object : auditedData
+
+    Trigger <|-- User
+    Trigger <|-- System
+
+    Object *-- "0..N" ObjectData
+
+    ObjectData --> "0..1" ObjectDataRole : role
+
+    ObjectData <|-- ObjectDataValue
+    ObjectData <|-- ObjectDataJSON
+    ObjectData <|-- ObjectDataS3
+```
 
 ## The consumer model
 

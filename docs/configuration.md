@@ -4,11 +4,11 @@ All properties use the prefix `jeap.audit`. They are only relevant when using th
 `jeap-spring-boot-audit-starter-transactional-outbox` module — the plain builder and consumer modules
 need no configuration of their own.
 
-| Name                                       | Default | Description                                                                                                                                                  |
-|--------------------------------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Name                                       | Default | Description                                                                                                                                                                |
+|--------------------------------------------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `jeap.audit.enabled`                       | `true`  | When `true` (the default), the transactional-outbox auto-configuration registers the `CreateAuditRecordCommandTransactionOutboxSender` bean(s). Set to `false` to disable. |
-| `jeap.audit.transactional-outbox.topic`    | —       | Single topic the command is sent to. The sender bean keeps the name `auditRecordCommandTransactionOutboxSender`. Mutually exclusive with `topics`.            |
-| `jeap.audit.transactional-outbox.topics`   | —       | List of topics. One `CreateAuditRecordCommandTransactionOutboxSender` bean is registered per topic, each qualified with the topic name. Mutually exclusive with `topic`. |
+| `jeap.audit.transactional-outbox.topic`    | —       | Single topic the command is sent to. The sender bean keeps the name `auditRecordCommandTransactionOutboxSender`. Mutually exclusive with `topics`.                         |
+| `jeap.audit.transactional-outbox.topics`   | —       | List of topics. One `CreateAuditRecordCommandTransactionOutboxSender` bean is registered per topic, each qualified with the topic name. Mutually exclusive with `topic`.   |
 
 Exactly one of `topic` / `topics` must be configured. Setting both, setting neither, or configuring
 empty or duplicate topics, fails fast at application startup.

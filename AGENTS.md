@@ -15,7 +15,7 @@ consumer helper that maps a received command into a plain Java `AuditRecord` mod
 
 ## Repository layout
 
-```
+```text
 pom.xml                                                # Parent POM (packaging=pom); declares the modules below
 jeap-audit-command-builder/                            # CreateAuditRecordCommandBuilder + CreateAuditRecordCommandBuilderFactory, auto-configuration
 jeap-spring-boot-audit-starter-transactional-outbox/   # Starter: CreateAuditRecordCommandTransactionOutboxSender, bean registrar, auto-configuration
@@ -61,6 +61,9 @@ repo. Dependency direction: `command-builder` ← `command-consumer` and `comman
 
 When changing public behaviour, update the matching focused file under [docs/](docs/) (one topic per
 file) and the documentation index in the README.
+
+Validate that files under `docs/*.md` are valid Markdown compatible with a Docusaurus site. Also
+validate that Mermaid diagrams in the Markdown files use correct Mermaid syntax.
 
 ## Versioning
 

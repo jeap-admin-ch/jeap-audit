@@ -13,13 +13,13 @@ transactional step.
 
 ## Sender methods
 
-| Method                                                                 | Trigger                                                           |
-|------------------------------------------------------------------------|------------------------------------------------------------------|
-| `auditUserTriggeredEvent(timestamp, builderConsumer)`                  | User, from the jEAP security token; service/system from properties |
-| `auditUserTriggeredEvent(serviceName, systemName, timestamp, builderConsumer)` | User, with explicit service/system                       |
-| `auditMessageTriggeredSystemEvent(department, timestamp, message, builderConsumer)` | System, from the consumed message; service/system from properties |
-| `auditMessageTriggeredSystemEvent(serviceName, systemName, department, timestamp, message, builderConsumer)` | System, with explicit service/system |
-| `auditEvent(command)`                                                  | None — sends an already-built `CreateAuditRecordCommand`          |
+| Method                                                                                                       | Trigger                                                            |
+|--------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------|
+| `auditUserTriggeredEvent(timestamp, builderConsumer)`                                                        | User, from the jEAP security token; service/system from properties |
+| `auditUserTriggeredEvent(serviceName, systemName, timestamp, builderConsumer)`                               | User, with explicit service/system                                 |
+| `auditMessageTriggeredSystemEvent(department, timestamp, message, builderConsumer)`                          | System, from the consumed message; service/system from properties  |
+| `auditMessageTriggeredSystemEvent(serviceName, systemName, department, timestamp, message, builderConsumer)` | System, with explicit service/system                               |
+| `auditEvent(command)`                                                                                        | None — sends an already-built `CreateAuditRecordCommand`           |
 
 All methods are `@Transactional`.
 
@@ -58,8 +58,9 @@ unqualified injection point works:
 private final CreateAuditRecordCommandTransactionOutboxSender sender;
 ```
 
-With multiple topics, one sender bean is registered per topic, each qualified with its topic name.
-Select one with `@Qualifier`:
+With multiple topics, one sender bean is registered per topic. In this mode the bean name is the
+topic name (not the fixed `auditRecordCommandTransactionOutboxSender` name used for single-topic), and
+each bean is also qualified with that topic name. Select one with `@Qualifier`:
 
 ```java
 MyComponent(@Qualifier("topic-one") CreateAuditRecordCommandTransactionOutboxSender senderOne,
