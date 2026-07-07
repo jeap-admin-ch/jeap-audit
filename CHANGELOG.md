@@ -15,6 +15,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Idempotent message handler: `IdempotentMessageHandlerExecutionSkippedException` now provides `MessageHandlerExceptionInformation`
   with temporality `TEMPORARY` and specific error codes, letting the jEAP error handling service resend skipped messages
   automatically instead of creating a manual task.
+- update jeap-messaging-outbox from 15.13.2 to 15.14.0
 
 ## [8.14.1] - 2026-07-06
 ### Changed
