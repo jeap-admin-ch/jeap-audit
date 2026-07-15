@@ -15,6 +15,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - update jeap-spring-boot-roles-anywhere-starter from 3.10.0 to 3.11.0
 - update jeap-crypto from 9.15.0 to 9.16.0
 - update jeap-spring-boot-vault-starter from 23.14.0 to 23.15.0
+- update jeap-messaging-outbox from 15.18.0 to 15.19.0
 
 ## [8.19.0] - 2026-07-13
 
