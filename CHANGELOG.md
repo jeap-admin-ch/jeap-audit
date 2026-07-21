@@ -10,6 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 - update jeap-messaging from 16.0.1 to 16.1.0
 - Complete the migration to the standalone WireMock Spring Boot integration.
+- update jeap-messaging-outbox from 16.0.1 to 16.1.0
 
 ## [9.0.1] - 2026-07-21
 ### Changed
