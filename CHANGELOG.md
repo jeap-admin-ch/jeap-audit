@@ -17,6 +17,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   is set) and rejected on publication (unless `publishWithoutContractAllowed` is set). The integration test exemption
   from consumer contract checks is now handled by a dedicated internal flag.
 - New switch `silentIgnoreWithoutContract` on the `jeap.messaging.contract` metric
+- update jeap-messaging-outbox from 13.11.0 to 13.12.0
+- update jeap-messaging from 16.3.0 to 17.0.0
 
 ## [6.11.0] - 2026-06-15
 
