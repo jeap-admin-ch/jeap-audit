@@ -20,6 +20,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - update jeap-crypto from 10.9.0 to 10.10.0
 - update testcontainers-floci from 2.11.0 to 2.13.0
 - update jeap-spring-boot-vault-starter from 24.9.0 to 24.10.0
+- update jeap-messaging-outbox from 17.8.0 to 17.9.0
 
 ## [10.7.0] - 2026-08-08
 
