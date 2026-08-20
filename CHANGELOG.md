@@ -32,6 +32,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
       AvroClassSecurity.installDefaultIfMissing();
   }
   ```
+- update jeap-messaging-outbox from 17.16.0 to 17.17.0
 
 ## [10.15.0] - 2026-08-19
 
