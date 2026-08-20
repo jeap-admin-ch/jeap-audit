@@ -5,8 +5,10 @@ import ch.admin.bit.jeap.audit.record.create.AuditUser;
 import ch.admin.bit.jeap.audit.record.create.CreateAuditRecordCommand;
 import ch.admin.bit.jeap.domainevent.DomainEventIdentity;
 import ch.admin.bit.jeap.domainevent.avro.AvroDomainEvent;
+import ch.admin.bit.jeap.messaging.avro.security.AvroClassSecurity;
 import ch.admin.bit.jeap.messaging.kafka.properties.KafkaProperties;
 import ch.admin.bit.jeap.messaging.model.MessagePublisher;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -30,6 +32,11 @@ class CreateAuditRecordCommandBuilderFactoryTest {
 
     private static final String SYSTEM_NAME_OTHER = "MY_SYSTEM_OTHER";
     private static final String SERVICE_NAME_OTHER = "MY_SERVICE_OTHER";
+
+    @BeforeAll
+    static void installAvroClassWhitelist() {
+        AvroClassSecurity.installDefaultIfMissing();
+    }
 
     @Test
     void userFromAuthorizationSystemServiceFromKafkaProperties() {

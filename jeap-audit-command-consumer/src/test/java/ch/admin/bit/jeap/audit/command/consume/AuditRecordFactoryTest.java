@@ -5,6 +5,8 @@ import ch.admin.bit.jeap.audit.command.consume.model.*;
 import ch.admin.bit.jeap.audit.record.create.AuditEventType;
 import ch.admin.bit.jeap.audit.record.create.AuditObjectDataRole;
 import ch.admin.bit.jeap.audit.record.create.CreateAuditRecordCommand;
+import ch.admin.bit.jeap.messaging.avro.security.AvroClassSecurity;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.nio.ByteBuffer;
@@ -25,6 +27,11 @@ class AuditRecordFactoryTest {
     private static final String SYSTEM_NAME = "MY_SYSTEM";
     private static final String SERVICE_NAME = "MY_SERVICE";
     private static final Instant TIMESTAMP = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    @BeforeAll
+    static void installAvroClassWhitelist() {
+        AvroClassSecurity.installDefaultIfMissing();
+    }
 
     @Test
     void build_noProcessId_triggerUser_NoAuditObject_EventNoContextAndNoDataElement() {

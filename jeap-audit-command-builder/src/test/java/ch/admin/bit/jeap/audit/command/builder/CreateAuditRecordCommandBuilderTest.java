@@ -1,11 +1,13 @@
 package ch.admin.bit.jeap.audit.command.builder;
 
 import ch.admin.bit.jeap.audit.record.create.*;
+import ch.admin.bit.jeap.messaging.avro.security.AvroClassSecurity;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.Encoder;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificDatumWriter;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -28,6 +30,11 @@ class CreateAuditRecordCommandBuilderTest {
     private static final String SYSTEM_NAME = "MY_SYSTEM";
     private static final String SERVICE_NAME = "MY_SERVICE";
     private static final Instant TIMESTAMP = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    @BeforeAll
+    static void installAvroClassWhitelist() {
+        AvroClassSecurity.installDefaultIfMissing();
+    }
 
     @Test
     void build_noProcessId_triggerUser_NoAuditObject_EventNoContextAndNoDataElement() {
