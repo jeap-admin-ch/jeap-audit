@@ -10,6 +10,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 - update jeap-messaging from 18.2.1 to 18.2.2
 - update jeap-spring-boot-roles-anywhere-starter from 3.30.0 to 3.30.1
+- update jeap-messaging-outbox from 17.19.0 to 17.19.1
 
 ## [10.17.1] - 2026-08-26
 ### Changed
