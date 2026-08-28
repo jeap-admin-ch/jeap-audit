@@ -27,7 +27,7 @@
 
     <artifactId>jeap-audit</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
-    <version>10.19.2-SNAPSHOT</version>
+    <version>10.19.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -38,7 +38,7 @@
 
     <properties>
         <maven.javadoc.skip>false</maven.javadoc.skip>
-        <jeap-messaging.version>18.4.2</jeap-messaging.version>
+        <jeap-messaging.version>18.4.3</jeap-messaging.version>
         <jeap-messaging-outbox.version>17.21.2</jeap-messaging-outbox.version>
         <jeap-starter.version>24.23.1</jeap-starter.version>
     </properties>
