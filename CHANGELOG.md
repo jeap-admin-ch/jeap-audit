@@ -11,6 +11,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - update jeap-messaging from 18.4.2 to 18.4.3
 - update jeap-crypto from 10.21.1 to 10.21.2
 - Exclude both AWS SDK Apache HTTP clients when using the URL connection client.
+- update jeap-messaging-outbox from 17.21.2 to 17.21.3
 
 ## [10.19.2] - 2026-08-28
 ### Changed
