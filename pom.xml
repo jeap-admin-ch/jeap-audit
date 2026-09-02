@@ -39,7 +39,7 @@
     <properties>
         <maven.javadoc.skip>false</maven.javadoc.skip>
         <jeap-messaging.version>18.6.0</jeap-messaging.version>
-        <jeap-messaging-outbox.version>17.22.0</jeap-messaging-outbox.version>
+        <jeap-messaging-outbox.version>17.23.0</jeap-messaging-outbox.version>
         <jeap-starter.version>24.25.0</jeap-starter.version>
     </properties>
 
