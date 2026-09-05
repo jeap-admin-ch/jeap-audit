@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [10.25.0] - 2026-09-05
+
+### Changed
+
+- Update parent from 9.2.2 to 9.3.0
+
 ## [10.24.0] - 2026-09-03
 ### Changed
 - update jeap-starter from 24.27.0 to 24.28.0
