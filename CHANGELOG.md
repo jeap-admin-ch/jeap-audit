@@ -12,6 +12,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Exempt the framework-owned `ModulithPublicationProcessingFailedEvent` from producer contract validation.
 - Clarify that source microservices still require retry/discard consumer contracts, checked by the enabled starter
   at startup.
+- update jeap-messaging-outbox from 17.27.0 to 17.27.1
 
 ## [10.25.0] - 2026-09-05
 
