@@ -11,6 +11,9 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Changed
 - Update parent from 9.4.2 to 9.5.0
 - update jeap-starter from 25.0.0 to 25.1.0
+- update jeap-messaging-outbox from 18.0.0 to 18.1.0
+- Optional durable message headers for immediate and scheduled sends. Header storage is disabled by default;
+  existing APIs and the `deferred_message` schema remain unchanged.
 
 ## [11.0.0] - 2026-09-11
 ### Changed
