@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [11.0.0] - 2026-09-11
+### Changed
+- update jeap-starter from 24.33.0 to 25.0.0
+- Default the AWS Advanced JDBC Wrapper dialect to `aurora-pg`, avoiding database-dialect auto-detection for Aurora
+  PostgreSQL. Applications using standard RDS PostgreSQL must override
+  `jeap.datasource.aws.wrapper.target-data-source-properties.wrapperDialect=rds-pg`.
+
 ## [10.28.0] - 2026-09-10
 
 ### Changed
