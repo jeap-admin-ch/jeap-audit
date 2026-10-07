@@ -104,6 +104,16 @@ public class CreateAuditRecordCommandTransactionOutboxSender {
         send(command);
     }
 
+    /**
+     * Enqueues a command for delivery to the configured topic by the background outbox relay.
+     *
+     * @param command the command to send
+     */
+    @Transactional
+    public void auditEventScheduled(CreateAuditRecordCommand command) {
+        transactionalOutbox.sendMessageScheduled(command, topic);
+    }
+
     private void send(CreateAuditRecordCommand command) {
         transactionalOutbox.sendMessage(command, topic);
     }

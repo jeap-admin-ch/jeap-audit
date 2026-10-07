@@ -26,7 +26,7 @@ Start with [Getting started](docs/getting-started.md), then follow the links bel
 | Getting started (add a dependency, build & send a command)   | [docs/getting-started.md](docs/getting-started.md)                   |
 | Architecture & audit-record model                            | [docs/architecture.md](docs/architecture.md)                         |
 | Building the command (`CreateAuditRecordCommandBuilder`)     | [docs/building-the-command.md](docs/building-the-command.md)         |
-| Sending via transactional outbox                             | [docs/transactional-outbox.md](docs/transactional-outbox.md)         |
+| Sending via transactional outbox (immediate or scheduled)     | [docs/transactional-outbox.md](docs/transactional-outbox.md)         |
 | Consuming audit commands                                     | [docs/consuming-audit-commands.md](docs/consuming-audit-commands.md) |
 | Configuration reference (`jeap.audit.*`)                     | [docs/configuration.md](docs/configuration.md)                       |
 

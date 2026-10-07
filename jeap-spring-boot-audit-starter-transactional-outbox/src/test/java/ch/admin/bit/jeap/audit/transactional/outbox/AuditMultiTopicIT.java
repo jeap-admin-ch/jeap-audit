@@ -5,7 +5,8 @@ import ch.admin.bit.jeap.audit.record.create.AuditEventType;
 import ch.admin.bit.jeap.audit.record.create.CreateAuditRecordCommand;
 import ch.admin.bit.jeap.messaging.kafka.test.KafkaIntegrationTestBase;
 import org.awaitility.Awaitility;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,7 +31,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = TestApp.class,
         properties = {
                 "jeap.audit.transactional-outbox.topics[0]=" + AuditMultiTopicIT.PRIMARY_TOPIC,
-                "jeap.audit.transactional-outbox.topics[1]=" + AuditMultiTopicIT.SECONDARY_TOPIC
+                "jeap.audit.transactional-outbox.topics[1]=" + AuditMultiTopicIT.SECONDARY_TOPIC,
+                "jeap.messaging.transactional-outbox.poll-delay=100"
         }
 )
 @Import(AuditMultiTopicIT.TestConfig.class)
@@ -51,10 +53,18 @@ class AuditMultiTopicIT extends KafkaIntegrationTestBase {
     @Autowired
     private MultiTopicAuditCommandConsumer auditCommandConsumer;
 
-    @Test
-    void createsSenderBeanForEachConfiguredTopicQualifiedByTopicName() {
-        primaryTopicSender.auditEvent(createCommand("primary-process", Instant.parse("2026-05-28T08:00:00Z")));
-        secondaryTopicSender.auditEvent(createCommand("secondary-process", Instant.parse("2026-05-28T08:00:01Z")));
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    void createsSenderBeanForEachConfiguredTopicQualifiedByTopicName(boolean scheduled) {
+        CreateAuditRecordCommand primaryCommand = createCommand("primary-process", Instant.parse("2026-05-28T08:00:00Z"));
+        CreateAuditRecordCommand secondaryCommand = createCommand("secondary-process", Instant.parse("2026-05-28T08:00:01Z"));
+        if (scheduled) {
+            primaryTopicSender.auditEventScheduled(primaryCommand);
+            secondaryTopicSender.auditEventScheduled(secondaryCommand);
+        } else {
+            primaryTopicSender.auditEvent(primaryCommand);
+            secondaryTopicSender.auditEvent(secondaryCommand);
+        }
 
         Awaitility.await()
                 .atMost(5, TimeUnit.SECONDS)

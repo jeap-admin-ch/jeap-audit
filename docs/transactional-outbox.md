@@ -20,8 +20,15 @@ transactional step.
 | `auditMessageTriggeredSystemEvent(department, timestamp, message, builderConsumer)`                          | System, from the consumed message; service/system from properties  |
 | `auditMessageTriggeredSystemEvent(serviceName, systemName, department, timestamp, message, builderConsumer)` | System, with explicit service/system                               |
 | `auditEvent(command)`                                                                                        | None — sends an already-built `CreateAuditRecordCommand`           |
+| `auditEventScheduled(command)`                                                                               | None — enqueues an already-built command for background delivery   |
 
 All methods are `@Transactional`.
+
+`auditEvent` and the builder convenience methods use `TransactionalOutbox.sendMessage`, which sends
+after transaction commit in the caller's thread. Use `auditEventScheduled(command)` to delegate to
+`TransactionalOutbox.sendMessageScheduled` instead. the command is persisted in the transaction and
+sent later by the background relay, without making the caller wait for Kafka. A running outbox relay
+is required; delivery latency depends on its polling interval.
 
 ```java
 sender.auditMessageTriggeredSystemEvent(serviceName, systemName, triggeringServiceDepartment,
